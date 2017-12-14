@@ -1,5 +1,7 @@
 package login;
 
+import chatWindow.ChatController;
+import chatWindow.Listener;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -34,7 +36,7 @@ public class LoginController {
     private JFXButton btnLogin;
     @FXML
     private JFXButton btnRegister;
-
+    private static ChatController con;
 
     @FXML
     void bntClickLogin(MouseEvent event) {
@@ -83,6 +85,11 @@ public class LoginController {
                 (((Node) event.getSource()).getScene()).getWindow().hide();
                 FXMLLoader fmxlLoader = new FXMLLoader(getClass().getClassLoader().getResource("views/chatScene.fxml"));
                 Parent window = (Pane) fmxlLoader.load();
+                con = fmxlLoader.<ChatController>getController();
+                Listener listener  = new Listener(con);
+                Thread thread = new Thread(listener);
+                thread.start();
+
                 Scene scene = new Scene(window);
                 Stage stage = new Stage();
                 stage.getIcons().add(new Image(getClass().getClassLoader().getResource("images/plug.png").toString()));
@@ -122,6 +129,5 @@ public class LoginController {
         // Main.primaryStage.setScene(new Scene(parent));
         // Main.primaryStage.show();
     }
-
 
 }

@@ -1,5 +1,7 @@
 package login;
 
+import chatWindow.ChatController;
+import chatWindow.Listener;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -15,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import until.SHA;
 import userAction.CheckInput;
 import userAction.Compression;
 import userAction.Consts;
@@ -147,7 +150,7 @@ public class RegisterController {
             connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
 
-
+            System.out.println(SHA.encrypt(password));
             connection.connect();
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 List<String> cookies = connection.getHeaderFields().get(CookiesWork.COOKIES_HEADER);
@@ -192,6 +195,13 @@ public class RegisterController {
     private void newScene(MouseEvent event, String fxml, String name) throws IOException {
         (((Node) event.getSource()).getScene()).getWindow().hide();
         FXMLLoader fmxlLoader = new FXMLLoader(getClass().getClassLoader().getResource(fxml));
+        if (fxml.equals("views/chatScene.fxml")) {
+            Parent window = (Pane) fmxlLoader.load();
+            ChatController con = fmxlLoader.<ChatController>getController();
+            Listener listener = new Listener(con);
+            Thread thread = new Thread(listener);
+            thread.start();
+        }
         Parent window = (Pane) fmxlLoader.load();
         Scene scene = new Scene(window);
         Stage stage = new Stage();
