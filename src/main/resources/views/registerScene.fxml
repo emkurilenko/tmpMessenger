@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="382.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.RegisterController">
+   <children>
+      <VBox prefHeight="382.0" prefWidth="400.0" style="-fx-background-color: #FFFFFF;">
+         <children>
+            <JFXTextField fx:id="idLogin" alignment="CENTER" labelFloat="true" promptText="Login">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" top="20.0" />
+               </VBox.margin>
+            </JFXTextField>
+            <JFXPasswordField fx:id="idPass" alignment="CENTER" labelFloat="true" promptText="Password">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" top="20.0" />
+               </VBox.margin>
+            </JFXPasswordField>
+            <JFXTextField fx:id="idName" alignment="CENTER" labelFloat="true" promptText="Имя">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" top="20.0" />
+               </VBox.margin>
+            </JFXTextField>
+            <JFXTextField fx:id="idSecondName" alignment="CENTER" labelFloat="true" promptText="Фамилия">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" top="20.0" />
+               </VBox.margin>
+            </JFXTextField>
+            <HBox prefHeight="80.0" prefWidth="400.0">
+               <children>
+                  <JFXButton fx:id="btnImageChoice" buttonType="RAISED" maxHeight="25.0" maxWidth="150.0" minHeight="30.0" minWidth="100.0" onMouseClicked="#btnChoice" style="-fx-background-color: #0288D1;" text="Choice image">
+                     <font>
+                        <Font name="Times New Roman" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="80.0" right="25.0" top="25.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <ImageView fx:id="img" fitHeight="80.0" fitWidth="80.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                     <HBox.margin>
+                        <Insets left="50.0" top="5.0" />
+                     </HBox.margin>
+                  </ImageView>
+               </children>
+               <VBox.margin>
+                  <Insets top="2.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="46.0" prefWidth="400.0">
+               <children>
+                  <JFXButton fx:id="btnRegister" buttonType="RAISED" maxWidth="150.0" minHeight="30.0" minWidth="100.0" onMouseClicked="#btnRegister" style="-fx-background-color: #0288D1;" text="Register" textAlignment="CENTER">
+                     <font>
+                        <Font name="Times New Roman" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="80.0" right="25.0" top="5.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton buttonType="RAISED" minHeight="30.0" minWidth="100.0" onMouseClicked="#btnCancel" style="-fx-background-color: #0288D1;" text="Cancel">
+                     <font>
+                        <Font name="Times New Roman" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="25.0" top="5.0" />
+                     </HBox.margin></JFXButton>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

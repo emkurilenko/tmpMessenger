@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.LoginController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="320.0">
+         <children>
+            <JFXTextField fx:id="loginUser" alignment="CENTER" labelFloat="true" promptText="Login user" unFocusColor="#a2a2a2">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" top="25.0" />
+               </VBox.margin>
+            </JFXTextField>
+            <JFXPasswordField fx:id="passLogin" alignment="CENTER" labelFloat="true" promptText="Password user" unFocusColor="#a2a2a2">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" top="25.0" />
+               </VBox.margin>
+            </JFXPasswordField>
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <JFXButton fx:id="btnLogin" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" maxWidth="150.0" minWidth="100.0" onMouseClicked="#bntClickLogin" style="-fx-background-color: #0288D1;" text="Login" textAlignment="CENTER">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="btnRegister" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" maxWidth="150.0" minWidth="100.0" onMouseClicked="#btnClickRegister" style="-fx-background-color: #0288D1;" text="Register" textAlignment="CENTER">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
