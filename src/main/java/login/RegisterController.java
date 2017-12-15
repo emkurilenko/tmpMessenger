@@ -120,22 +120,6 @@ public class RegisterController {
                 wr.close();
                 int code = connection.getResponseCode();
                 System.out.println(code);
-                   /* if (HttpURLConnection.HTTP_OK == connection.getResponseCode()) {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        String line = in.readLine();
-
-                        if (line != null) {
-                            System.out.println(line);
-                        } else {
-                            Alert alert = new Alert(Alert.AlertType.WARNING);
-                            alert.setContentText("Проблема с загрузкой файла!");
-                            alert.setHeaderText("Ошибка!");
-                            alert.showAndWait();
-                        }
-                        in.close();
-                    } else {
-                        System.out.println("fail " + connection.getResponseCode() + ", " + connection.getResponseMessage());
-                    }*/
             } catch (Throwable cause) {
                 cause.getStackTrace();
             } finally {
@@ -145,7 +129,7 @@ public class RegisterController {
             }
         }
         try {
-            String url = Consts.URL + "?operation=register&login=" + login + "&password=" + password +
+            String url = Consts.URL + "?operation=register&login=" + login + "&password=" + SHA.encrypt(password) +
                     "&name=" + URLEncoder.encode(name, "UTF-8") + "&surname=" + URLEncoder.encode(secondName, "UTF-8");
             connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
@@ -158,7 +142,7 @@ public class RegisterController {
                 CookiesWork.cookie = vals[1];
                 connection.disconnect();
                 System.out.println(CookiesWork.cookie);
-                newScene(event, "views/chatScene.fxml", "MessegerPSU");
+                newScene(event, "views/chatScene.fxml", "MessengerPSU");
             } else if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
                 Consts.showErrorDialog(null, "The login may already be busy.");
                 return;
@@ -195,18 +179,19 @@ public class RegisterController {
     private void newScene(MouseEvent event, String fxml, String name) throws IOException {
         (((Node) event.getSource()).getScene()).getWindow().hide();
         FXMLLoader fmxlLoader = new FXMLLoader(getClass().getClassLoader().getResource(fxml));
+        Parent window = (Pane) fmxlLoader.load();
         if (fxml.equals("views/chatScene.fxml")) {
-            Parent window = (Pane) fmxlLoader.load();
             ChatController con = fmxlLoader.<ChatController>getController();
             Listener listener = new Listener(con);
             Thread thread = new Thread(listener);
             thread.start();
         }
-        Parent window = (Pane) fmxlLoader.load();
         Scene scene = new Scene(window);
         Stage stage = new Stage();
         stage.setTitle(name);
         stage.setScene(scene);
+        stage.getIcons().add(new Image(getClass().getClassLoader().getResource("images/plug.png").toString()));
+        stage.setResizable(false);
         stage.show();
     }
 

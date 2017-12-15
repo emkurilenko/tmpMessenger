@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
 <BorderPane maxHeight="620.0" maxWidth="1040.0" prefHeight="620.0" prefWidth="1040.0" style="-fx-background-color: #FAFAFA;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chatWindow.ChatController">
    <top>
       <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #031c30;" BorderPane.alignment="CENTER">
@@ -103,8 +111,8 @@
             </HBox>
             <Pane prefHeight="469.0" prefWidth="250.0">
                <children>
-                  <ListView fx:id="firstListViewUser" onMouseClicked="#firstListViewUserListener" prefHeight="470.0" prefWidth="250.0" />
-                  <ListView fx:id="secondListViewDialog" onMouseClicked="#secondListViewDialogListener" prefHeight="470.0" prefWidth="250.0" />
+                  <ListView fx:id="firstListViewUser" onMouseClicked="#firstListViewUserListener" prefHeight="470.0" prefWidth="250.0" stylesheets="@../styles/ListViewStyle.css" />
+                  <ListView fx:id="secondListViewDialog" onMouseClicked="#secondListViewDialogListener" prefHeight="470.0" prefWidth="250.0" stylesheets="@../styles/ListViewStyle.css" />
                </children>
             </Pane>
          </children>
@@ -133,7 +141,7 @@
                   </ImageView>
                </children>
             </HBox>
-            <ListView fx:id="chatPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="533.0" prefWidth="790.0" />
+            <ListView fx:id="chatPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="497.0" prefWidth="790.0" />
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="100.0">
                <children>
                   <TextArea fx:id="messageBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="100.0" nodeOrientation="LEFT_TO_RIGHT" onKeyPressed="#sendMethod" prefHeight="16.0" prefWidth="698.0" promptText="Enter Message..." scaleShape="false" HBox.hgrow="ALWAYS">

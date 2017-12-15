@@ -37,47 +37,44 @@ public class GetUserInformation {
         return user;
     }
 
-    public static BufferedImage getPicture(String login) {
+    public static BufferedImage getPictureSmallSize(String login) {
         URL url;
         HttpURLConnection connection = null;
-        int code;
         int codeImage;
         BufferedImage bi = null;
         try {
             InputStream isa = new FileInputStream("src/main/resources/images/default40x40.png");
-            String str = Consts.URL + "?operation=profile&type=image&login=" + login;
+            String str = Consts.URL + "?operation=profile&type=image&login=" + login + "&size=small";
             url = new URL(str);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Cookie", CookiesWork.cookie);
             codeImage = connection.getResponseCode();
-            InputStream is = connection.getInputStream();
+
             if (codeImage == HttpURLConnection.HTTP_OK) {
+                InputStream is = connection.getInputStream();
                 bi = ImageIO.read(is);
                 if (bi == null) {
-                    // Const.createResizedCopy(bi,40, 40, true);
+                    System.out.println("error code");
                     bi = ImageIO.read(isa);
+                    is.close();
+                    isa.close();
+                    connection.disconnect();
+                    return bi;
                 } else {
-                    bi = Consts.createResizedCopy(Compression.compress(bi, 0.5f),
+                    bi = Consts.createResizedCopy(Compression.compress(bi, 0.9f),
                             40, 40, true);
-               /*     user.setPicture(Consts.createResizedCopy(Compression.compress(bi, 0.5f),
-                            40, 40, true));*/
                 }
             } else {
-                System.out.println("ololo");
                 bi = ImageIO.read(isa);
-                // user.setPicture(ImageIO.read(isa));
             }
-            is.close();
             isa.close();
             connection.disconnect();
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("not found file");
-        }
-        catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("error get picture size");
-        }
-        finally {
+        } finally {
             if (connection != null)
                 connection.disconnect();
         }
@@ -90,27 +87,34 @@ public class GetUserInformation {
         int code;
         int codeImage;
         BufferedImage bi = null;
+        System.out.println(login);
         try {
-            String str = Consts.URL + "?operation=profile&type=image&login=" + login;
+            String str = Consts.URL + "?operation=profile&type=image&login=" + login + "&size=full";
             url = new URL(str);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Cookie", CookiesWork.cookie);
             codeImage = connection.getResponseCode();
+            System.out.println(codeImage);
             if (codeImage == HttpURLConnection.HTTP_OK) {
                 InputStream is = connection.getInputStream();
                 bi = ImageIO.read(is);
                 if (bi == null) {
                     InputStream isa = new FileInputStream("src/main/resources/images/default.png");
-                    System.out.println("file found");
+                    System.out.println("file found 1");
+                    connection.disconnect();
                     bi = ImageIO.read(isa);
+                } else {
+                    System.out.println("else");
+                    connection.disconnect();
+                    return bi;
                 }
             } else {
                 InputStream isa = new FileInputStream("src/main/resources/images/default.png");
-                System.out.println("file found");
+                System.out.println("file found 2");
+                connection.disconnect();
                 bi = ImageIO.read(isa);
             }
-            connection.disconnect();
         } catch (Exception e) {
             System.out.println("error get picture full size");
         } finally {

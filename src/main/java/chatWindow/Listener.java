@@ -1,9 +1,6 @@
 package chatWindow;
 
-import userAction.AllUser;
-import userAction.CookiesWork;
-import userAction.GetUserInformation;
-import userAction.User;
+import userAction.*;
 
 import javax.imageio.ImageIO;
 
@@ -23,6 +20,10 @@ public class Listener implements Runnable {
         initializeUser();
         AllUser.allUser();
         controller.setListView(AllUser.getList());
+
+        GetAllDialog.refreshDialog();
+        controller.setSecondListViewDialog(GetAllDialog.allDialog);
+        System.out.println(GetAllDialog.allDialog.size());
     }
 
     private void initializeUser(){

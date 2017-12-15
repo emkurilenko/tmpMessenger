@@ -8,6 +8,12 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 
 public class Main extends Application {
     public static Stage primaryStageObj;
@@ -22,6 +28,7 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(mainScene);
         //primaryStage.initStyle(StageStyle.UNDECORATED);
+
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> Platform.exit());
     }

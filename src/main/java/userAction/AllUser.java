@@ -49,8 +49,7 @@ public class AllUser {
             if (us.getLogin().equals(CookiesWork.cookie)) {
                 continue;
             } else {
-                System.out.println("download");
-                us.setPicture(GetUserInformation.getPicture(us.getLogin()));
+                us.setPicture(GetUserInformation.getPictureSmallSize(us.getLogin()));
                 list.add(us);
             }
         }

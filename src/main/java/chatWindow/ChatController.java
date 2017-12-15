@@ -18,8 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import userAction.Message;
-import userAction.User;
+import userAction.*;
 
 import java.awt.image.BufferedImage;
 import java.net.URL;
@@ -51,13 +50,16 @@ public class ChatController implements Initializable {
     @FXML
     private ListView<User> firstListViewUser;
     @FXML
-    private ListView<?> secondListViewDialog;
+    private ListView<Dialog> secondListViewDialog;
     @FXML
     private ListView<?> chatPane;
     @FXML
     private TextArea messageBox;
     @FXML
     private JFXButton buttonSend;
+
+    private ObservableList<User> usersList;
+    private ObservableList<Dialog> dialogsList;
 
     public void setImageUser(BufferedImage imageUser) {
         this.imageUser.setImage(SwingFXUtils.toFXImage(imageUser, null));
@@ -90,6 +92,7 @@ public class ChatController implements Initializable {
     void clickBtnDialog(MouseEvent event) {
         secondListViewDialog.setVisible(true);
         firstListViewUser.setVisible(false);
+        GetAllDialog.refreshDialog();
     }
 
     @FXML
@@ -101,7 +104,7 @@ public class ChatController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         firstListViewUser.setVisible(false);
-        secondListViewDialog.setVisible(false);
+        secondListViewDialog.setVisible(true);
     }
 
     @FXML
@@ -116,9 +119,23 @@ public class ChatController implements Initializable {
 
     public void setListView(ArrayList<User> list) {
         Platform.runLater(() -> {
-            ObservableList<User> users = FXCollections.observableList(list);
-            firstListViewUser.setItems(users);
+            usersList = FXCollections.observableList(list);
+            firstListViewUser.setItems(usersList);
             firstListViewUser.setCellFactory(new CellRenderUser());
+        });
+    }
+
+    public void setSecondListViewDialog(ArrayList<Dialog> list) {
+        Platform.runLater(() -> {
+
+            for (Dialog dlg:
+                 list) {
+                System.out.println(dlg);
+            }
+            System.out.println("secondViewDialog SIZE: " + list.size());
+            dialogsList = FXCollections.observableList(list);
+            secondListViewDialog.setItems(dialogsList);
+            secondListViewDialog.setCellFactory(new CellRenderDialog());
         });
     }
 }
