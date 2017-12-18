@@ -94,7 +94,7 @@ public class RegisterController {
         if (fileImage != null) {
             try {
                 byte[] imageInByte;
-                BufferedImage original = Compression.compress(ImageIO.read(fileImage), 0.3f);
+                BufferedImage original = Compression.compress(ImageIO.read(fileImage), 0.5f);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
                 ImageIO.write(original, "jpg", baos);
@@ -119,7 +119,7 @@ public class RegisterController {
                 wr.flush();
                 wr.close();
                 int code = connection.getResponseCode();
-                System.out.println(code);
+                System.out.println("register picture: " + code);
             } catch (Throwable cause) {
                 cause.getStackTrace();
             } finally {

@@ -43,7 +43,6 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
                         ImageView imageView = new ImageView(image);
 
 
-
                         Text dateText = new Text();
                         Date data = new Date(dlg.getDate());
                         String hours = String.valueOf(data.getHours());
@@ -53,10 +52,15 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
                         dateText.setText(hours + ":" + minutes);
                         dateText.setFont(Font.font("SansSerif Regular", 12));
 
-
-                        Text lastMessage = new Text(dlg.getLastMessage());
-                        lastMessage.setFont(Font.font("SansSerif Regular", 14));
-
+                        Text lastMessage = null;
+                        if (dlg.getType().equals("text")) {
+                            lastMessage = new Text(dlg.getLastMessage());
+                            lastMessage.setFont(Font.font("SansSerif Regular", 14));
+                        }
+                        if (dlg.getType().equals("sound")) {
+                            lastMessage = new Text("sound message");
+                            lastMessage.setFont(Font.font("SansSerif Regular", 14));
+                        }
 
                         if (dlg.isUnread()) {
                             hBox.setStyle("-fx-background-color: #fff2f2;");
@@ -67,7 +71,7 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
 
                         vBox.getChildren().addAll(second, lastMessage);
 
-                         hBox.getChildren().addAll(imageView, vBox, dateText);
+                        hBox.getChildren().addAll(imageView, vBox, dateText);
                         //hBox.getChildren().addAll(vBox, dateText);
 
                         hBox.setPadding(new Insets(5, 10, 5, 10));

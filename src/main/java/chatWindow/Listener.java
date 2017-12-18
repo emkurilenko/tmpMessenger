@@ -13,7 +13,7 @@ import java.util.Calendar;
 public class Listener implements Runnable {
 
     private String coockie;
-    public ChatController controller;
+    public static ChatController controller;
     private User user;
 
     public Listener(ChatController controller) {
@@ -43,7 +43,7 @@ public class Listener implements Runnable {
     public static void sendVoiceMessage(byte[] audio) {
         HttpURLConnection connection = null;
         URL url;
-        int code;
+        int code = 0;
         try {
             url = new URL(Consts.URL + "?operation=sendSound");
             connection = (HttpURLConnection) url.openConnection();
@@ -62,6 +62,11 @@ public class Listener implements Runnable {
         } finally {
             if (connection != null)
                 connection.disconnect();
+        }
+        if(code == HttpURLConnection.HTTP_OK){
+            send(new Message(CookiesWork.cookie, controller.getReciver(),"sound", Calendar.getInstance().getTimeInMillis()));
+        }else{
+            Consts.showErrorDialog("Ошибка отправления! Возможно проблемы с сетью.", "Звук не отправлен.");
         }
     }
 

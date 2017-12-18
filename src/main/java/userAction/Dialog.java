@@ -9,6 +9,15 @@ public class Dialog {
     private long date;
     private boolean unread;
     private BufferedImage picture;
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public BufferedImage getPicture() {
         return picture;

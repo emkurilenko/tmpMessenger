@@ -87,12 +87,16 @@ public class ChatController implements Initializable {
     private ObservableList<User> usersList;
     private ObservableList<Dialog> dialogsList;
 
+
     private String reciver;
     Image userSmallImage = SwingFXUtils.toFXImage(GetUserInformation.getPictureSmallSize(CookiesWork.cookie), null);
     Image reciverSmallImage;
     Image microphoneActiveImage = new Image(getClass().getClassLoader().getResource("images/microphone-active.png").toString());
     Image microphoneInactiveImage = new Image(getClass().getClassLoader().getResource("images/microphone.png").toString());
 
+    public String getReciver() {
+        return reciver;
+    }
 
     public void recordVoiceMessage(MouseEvent event) throws IOException {
         if (VoiceUtil.isRecording()) {
@@ -124,25 +128,22 @@ public class ChatController implements Initializable {
         Task<HBox> othersMessages = new Task<HBox>() {
             @Override
             public HBox call() throws Exception {
-                ImageView profileImage = new ImageView(reciverSmallImage);
-                profileImage.setFitHeight(32);
-                profileImage.setFitWidth(32);
                 BubbledLabel bl6 = new BubbledLabel();
                 if (msg.getType().equals("text")) {
-                    bl6.setText(msg.getReceiver() + ": " + msg.getMessage());
+                    bl6.setText(msg.getSender() + ": " + msg.getMessage());
 
-                } else {
+                }
+                if (msg.getType().equals("sound")) {
                     ImageView imageview = new ImageView(new Image(getClass().getClassLoader().getResource("images/sound.png").toString()));
                     bl6.setGraphic(imageview);
                     bl6.setText("Sent a voice message!");
-                    // InputStream is = Listener.getSound(msg);
                     System.out.println("rec sound");
-                    // VoicePlayback.playAudio(Consts.toByteArray(is));
+                    VoicePlayback.playAudio(Consts.toByteArray(Listener.getSound(msg)));
                 }
                 bl6.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
                 HBox x = new HBox();
                 bl6.setBubbleSpec(BubbleSpec.FACE_LEFT_CENTER);
-                x.getChildren().addAll(dateText,profileImage, bl6);
+                x.getChildren().addAll(dateText, bl6);
                 // x.getChildren().addAll(bl6);
                 return x;
             }
@@ -155,19 +156,15 @@ public class ChatController implements Initializable {
         Task<HBox> yourMessages = new Task<HBox>() {
             @Override
             public HBox call() throws Exception {
-                ImageView profileImage = new ImageView(userSmallImage);
-                profileImage.setFitHeight(32);
-                profileImage.setFitWidth(32);
-
                 BubbledLabel bl6 = new BubbledLabel();
                 if (msg.getType().equals("text")) {
                     bl6.setText(msg.getMessage());
-                } else {
+                }
+                if (msg.getType().equals("sound")) {
                     bl6.setGraphic(new ImageView(new Image(getClass().getClassLoader().getResource("images/sound.png").toString())));
                     bl6.setText("Sent a voice message!");
-                    //InputStream is = Listener.getSound(msg);
                     System.out.println("sound my");
-                    //VoicePlayback.playAudio(Consts.toByteArray(is));
+                    VoicePlayback.playAudio(Consts.toByteArray(Listener.getSound(msg)));
                 }
                 bl6.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,
                         null, null)));
@@ -175,7 +172,7 @@ public class ChatController implements Initializable {
                 x.setMaxWidth(chatPane.getWidth() - 20);
                 x.setAlignment(Pos.TOP_RIGHT);
                 bl6.setBubbleSpec(BubbleSpec.FACE_RIGHT_CENTER);
-                x.getChildren().addAll(bl6, profileImage,dateText);
+                x.getChildren().addAll(bl6, dateText);
 
                 return x;
             }
@@ -184,11 +181,11 @@ public class ChatController implements Initializable {
 
         if (msg.getSender().equals(textLogin.getText())) {
             Thread t2 = new Thread(yourMessages);
-            t2.setDaemon(true);
+            //t2.setDaemon(true);
             t2.start();
         } else {
             Thread t = new Thread(othersMessages);
-            t.setDaemon(true);
+            //t.setDaemon(true);
             t.start();
         }
     }
@@ -276,7 +273,6 @@ public class ChatController implements Initializable {
     void listViewDialogListener(MouseEvent event) {
         reciver = listViewDialog.getSelectionModel().getSelectedItem().getSecond();
         chatPane.getItems().clear();
-        reciverSmallImage = SwingFXUtils.toFXImage(GetUserInformation.getPictureSmallSize(reciver), null);
         ArrayList<Message> buf = Listener.getMessage(reciver);
         for (Message msg :
                 buf) {
@@ -287,7 +283,14 @@ public class ChatController implements Initializable {
 
     @FXML
     void listViewUsersListener(MouseEvent event) {
-
+        reciver = listViewUsers.getSelectionModel().getSelectedItem().getLogin();
+        chatPane.getItems().clear();
+        ArrayList<Message> buf = Listener.getMessage(reciver);
+        for (Message msg :
+                buf) {
+            System.out.println(msg);
+            addToChat(msg);
+        }
     }
 
     public void setListSearchList(ArrayList<User> list) {
