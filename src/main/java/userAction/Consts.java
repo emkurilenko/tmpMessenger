@@ -9,12 +9,14 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
 public class Consts {
-    final public static String URL = "http://localhost:8080/mess/";
+    final public static String URL = "http://192.168.137.1:8080/mess/";
 
     public static Image byteToImage(byte[] arr) {
         BufferedImage img = null;
@@ -62,6 +64,19 @@ public class Consts {
         g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
         g.dispose();
         return scaledBI;
+    }
+
+    public static byte[] toByteArray(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int read = 0;
+        byte[] buffer = new byte[1024];
+        while (read != -1) {
+            read = inputStream.read(buffer);
+            if (read != -1)
+                out.write(buffer,0,read);
+        }
+        out.close();
+        return out.toByteArray();
     }
 
 }

@@ -62,7 +62,7 @@ public class GetUserInformation {
                     connection.disconnect();
                     return bi;
                 } else {
-                    bi = Consts.createResizedCopy(Compression.compress(bi, 0.9f),
+                    bi = Consts.createResizedCopy(Compression.compress(bi, 1.0f),
                             40, 40, true);
                 }
             } else {

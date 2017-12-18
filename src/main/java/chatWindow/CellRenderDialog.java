@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import userAction.Dialog;
+import userAction.GetUserInformation;
 import userAction.User;
 
 import java.util.Date;
@@ -37,8 +38,10 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
                         Text second = new Text(dlg.getSecond());
                         second.setFont(Font.font("SansSerif Regular", 16));
                         second.setFill(Color.valueOf("#01579B"));
+
                         Image image = SwingFXUtils.toFXImage(dlg.getPicture(), null);
                         ImageView imageView = new ImageView(image);
+
 
 
                         Text dateText = new Text();
@@ -59,11 +62,13 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
                             hBox.setStyle("-fx-background-color: #fff2f2;");
                         }
 
+
                         VBox vBox = new VBox();
 
                         vBox.getChildren().addAll(second, lastMessage);
 
-                        hBox.getChildren().addAll(imageView, vBox, dateText);
+                         hBox.getChildren().addAll(imageView, vBox, dateText);
+                        //hBox.getChildren().addAll(vBox, dateText);
 
                         hBox.setPadding(new Insets(5, 10, 5, 10));
                         hBox.setAlignment(Pos.CENTER_LEFT);

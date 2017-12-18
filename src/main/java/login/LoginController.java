@@ -15,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import until.SHA;
 import userAction.Consts;
 import userAction.CookiesWork;
 

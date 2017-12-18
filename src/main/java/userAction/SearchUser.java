@@ -9,8 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class AllUser {
-    private static ArrayList<User> list = new ArrayList<>();
+public class SearchUser {
+    private static ArrayList<User> list;
 
     public static ArrayList<User> getList() {
         return list;
@@ -20,13 +20,14 @@ public class AllUser {
         list = lst;
     }
 
-    public static void allUser() {
+    public static void allUser(String search) {
+        list = new ArrayList<>();
         ArrayList<User> buf = new ArrayList();
         HttpURLConnection connection = null;
         URL url;
         int code;
         try {
-            url = new URL(Consts.URL + "?operation=search");
+            url = new URL(Consts.URL + "?operation=search&value=" + search);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Cookie", CookiesWork.cookie);
