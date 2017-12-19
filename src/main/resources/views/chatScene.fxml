@@ -16,7 +16,7 @@
 
 <BorderPane maxHeight="620.0" maxWidth="1040.0" prefHeight="620.0" prefWidth="1040.0" style="-fx-background-color: #FAFAFA;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chatWindow.ChatController">
    <top>
-      <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #031c30;" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #583989;" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="imageUser" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -49,6 +49,30 @@
                   </Text>
                </children>
             </VBox>
+            <JFXButton fx:id="btnEditProfile" alignment="TOP_CENTER" contentDisplay="TOP" focusTraversable="false" onMouseClicked="#btnEditProfileListener" prefWidth="110.0" text=" Редактировать" textAlignment="CENTER" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="35.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/if_user_close_edit_103748.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <HBox.margin>
+                  <Insets left="540.0" />
+               </HBox.margin>
+            </JFXButton>
+            <JFXButton contentDisplay="TOP" onMouseClicked="#btnLogOutListener" prefWidth="110.0" text="Выход" textAlignment="CENTER" textFill="WHITE">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="35.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/log_out-64.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
          </children>
       </HBox>
    </top>

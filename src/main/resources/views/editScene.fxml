@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chatWindow.EditController">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="400.0">
+         <children>
+            <ImageView fx:id="userImage" fitHeight="100.0" fitWidth="100.0" onMousePressed="#listenerImage" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/default.png" />
+               </image>
+               <VBox.margin>
+                  <Insets left="150.0" right="150.0" top="25.0" />
+               </VBox.margin>
+            </ImageView>
+            <JFXTextField fx:id="nameUser" alignment="CENTER" labelFloat="true" promptText="Имя">
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" top="30.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="surnameUser" alignment="CENTER" labelFloat="true" promptText="Фамилия">
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" top="25.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font>
+            </JFXTextField>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+               <children>
+                  <JFXButton buttonType="RAISED" onMousePressed="#btnChangeProfile" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #0288D1;" text="Изменить">
+                     <font>
+                        <Font name="SansSerif Regular" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="btnCancel" buttonType="RAISED" onMousePressed="#btnCancelListener" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #0288D1;" text="Отмена">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -68,7 +68,7 @@ public class LoginController {
         }*/
 
         try {
-            String url = Consts.URL + "?operation=login&login=" + URLEncoder.encode(login, "UTF-8") + "&password=" + password;
+            String url = Consts.URL + "?operation=login&login=" + URLEncoder.encode(login, "UTF-8") + "&password=" +SHA.encrypt(password);
             connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
             connection.setDefaultUseCaches(false);

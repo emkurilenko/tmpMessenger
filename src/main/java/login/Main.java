@@ -30,7 +30,10 @@ public class Main extends Application {
         //primaryStage.initStyle(StageStyle.UNDECORATED);
 
         primaryStage.show();
-        primaryStage.setOnCloseRequest(event -> Platform.exit());
+        primaryStage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
     }
 
     public static Stage getPrimaryStage() {
@@ -43,7 +46,8 @@ public class Main extends Application {
 
     @Override
     public void stop() {
-
+        Platform.exit();
+        System.exit(0);
     }
 }
 
