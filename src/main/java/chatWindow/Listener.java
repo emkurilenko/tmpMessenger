@@ -78,7 +78,7 @@ public class Listener implements Runnable {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type", "video/3gpp");
+            connection.setRequestProperty("Content-Type", "audio/mp3");
             connection.setRequestProperty("charset", "utf-8");
             connection.setRequestProperty("Cookie", CookiesWork.cookie);
             connection.setRequestProperty("Content-Length", Integer.toString(audio.length));
@@ -151,10 +151,11 @@ public class Listener implements Runnable {
         return bufMessages;
     }
 
-    public synchronized static InputStream getSound(Message msg) {
+    public synchronized static String getSound(Message msg) {
         InputStream is = null;
         HttpURLConnection connection = null;
         URL url;
+        String fileName = "";
         try {
             String str = Consts.URL + "?operation=getSound&sender=" +
                     msg.getSender() + "&receiver=" + msg.getReceiver() + "&date=" + msg.getDate();
@@ -164,14 +165,29 @@ public class Listener implements Runnable {
             connection.setRequestProperty("Cookie", CookiesWork.cookie);
             int code = connection.getResponseCode();
             is = connection.getInputStream();
+
+            fileName = "src/main/resources/tmpsound/record-" + msg.getSender() + "-" + msg.getReceiver() + "-" + String.valueOf(msg.getDate() / 1000) + ".wave";
+            System.out.println(fileName);
+            File path = new File(fileName);
+            FileOutputStream fos;
+            try {
+                fos = new FileOutputStream(path);
+                fos.write(Compression.toByteArray(is));
+                fos.close();
+            } catch (Exception e) {
+                System.out.println("exception write sound");
+            }
+            // is.close();
             System.out.println("GET SOUND " + code);
             connection.disconnect();
+        } catch (FileNotFoundException e) {
+            System.out.println("FILE NOT FOUND!");
         } catch (Exception e) {
         } finally {
             if (connection != null)
                 connection.disconnect();
         }
-        return is;
+        return fileName;
     }
 
     public static ArrayList<Dialog> getDialog() {
@@ -224,7 +240,7 @@ public class Listener implements Runnable {
             buf = new Gson().fromJson(json, new TypeToken<ArrayList<User>>() {
             }.getType());
             int code = connection.getResponseCode();
-            if(code!=HttpURLConnection.HTTP_OK){
+            if (code != HttpURLConnection.HTTP_OK) {
                 Consts.showErrorDialog("Error connection", "Ошибка поиска пользователей.");
                 return null;
             }
@@ -242,6 +258,36 @@ public class Listener implements Runnable {
                 us.setPicture(GetUserInformation.getPictureSmallSize(us.getLogin()));
                 list.add(us);
             }
+        }
+        return list;
+    }
+
+    public static ArrayList<User> getFriendsUser() {
+        ArrayList<User> list = new ArrayList<>();
+        HttpURLConnection connection = null;
+        URL url;
+        try {
+            url = new URL(Consts.URL + "?operation=friends");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Cookie", CookiesWork.cookie);
+            int code = connection.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream(), "windows-1251"));
+            String json = in.readLine();
+            in.close();
+            connection.disconnect();
+            list = new Gson().fromJson(json, new TypeToken<ArrayList<User>>() {
+            }.getType());
+        } catch (Exception e) {
+        } finally {
+            if (connection != null)
+                connection.disconnect();
+        }
+
+        for (User us :
+                list) {
+            us.setPicture(GetUserInformation.getPictureSmallSize(us.getLogin()));
         }
         return list;
     }

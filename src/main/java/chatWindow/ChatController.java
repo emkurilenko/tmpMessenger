@@ -24,20 +24,23 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import login.Main;
-import until.VoicePlayback;
-import until.VoiceRecorder;
-import until.VoiceUtil;
+import until.Recorder;
 import until.bubble.BubbleSpec;
 import until.bubble.BubbledLabel;
 import userAction.*;
 
+import javax.sound.sampled.LineUnavailableException;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -84,6 +87,10 @@ public class ChatController implements Initializable {
     private ImageView microphoneImageView;
     @FXML
     private JFXButton btnEditProfile;
+    @FXML
+    private Text loginReciver;
+    @FXML
+    private ImageView imgReciver;
 
     private ObservableList<User> usersList;
     private ObservableList<Dialog> dialogsList;
@@ -94,6 +101,8 @@ public class ChatController implements Initializable {
     private ArrayList<Message> bufMessage;
     private Timer timer;
     private boolean firstTime = true;
+    private Recorder recorder;
+    private File bufferRecord;
 
     Image microphoneActiveImage = new Image(getClass().getClassLoader().getResource("images/microphone-active.png").toString());
     Image microphoneInactiveImage = new Image(getClass().getClassLoader().getResource("images/microphone.png").toString());
@@ -111,19 +120,31 @@ public class ChatController implements Initializable {
     }
 
     public void recordVoiceMessage(MouseEvent event) throws IOException {
-        if (VoiceUtil.isRecording()) {
+        if (!recorder.isRecord()) {
             Platform.runLater(() -> {
-                        microphoneImageView.setImage(microphoneInactiveImage);
-                    }
-            );
-            VoiceUtil.setRecording(false);
+                try {
+                    bufferRecord = new File("buffer.wave");
+                    microphoneImageView.setImage(microphoneActiveImage);
+                    recorder.beginRecording(bufferRecord);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                }
+            });
+            recorder.setRecord(true);
         } else {
             Platform.runLater(() -> {
-                        microphoneImageView.setImage(microphoneActiveImage);
-
-                    }
-            );
-            VoiceRecorder.captureAudio();
+                try {
+                    microphoneImageView.setImage(microphoneInactiveImage);
+                    recorder.endRecording();
+                    Listener.sendVoiceMessage(org.apache.commons.io.IOUtils.toByteArray(new FileInputStream(bufferRecord)));
+                    bufferRecord.delete();
+                    recorder.setRecord(false);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
@@ -303,9 +324,22 @@ public class ChatController implements Initializable {
 
     @FXML
     void btnClickContacts(MouseEvent event) {
-        chatPane.getItems().clear();
-        SearchPanel.setVisible(true);
-        listViewDialog.setVisible(false);
+        Platform.runLater(() -> {
+            if (!listViewUsers.getItems().isEmpty()) {
+                listViewUsers.getItems().removeAll();
+            }
+            chatPane.getItems().clear();
+            SearchPanel.setVisible(true);
+            listViewDialog.setVisible(false);
+            ArrayList<User> friends = Listener.getFriendsUser();
+            if (!friends.isEmpty()) {
+                usersList = FXCollections.observableList(friends);
+                listViewUsers.setItems(usersList);
+                listViewUsers.setCellFactory(new CellRenderUser());
+                listViewUsers.refresh();
+            }
+        });
+
     }
 
     @FXML
@@ -317,17 +351,31 @@ public class ChatController implements Initializable {
     }
 
     @FXML
-    void chooseMessage(MouseEvent event){
+    void chooseMessage(MouseEvent event) {
         Platform.runLater(() -> {
             System.out.println("CHECK +++++++++++++++++++++++");
             int index = chatPane.getSelectionModel().getSelectedIndex();
             System.out.println(index);
-            Message message = bufMessage.get(index);
-            System.out.println("THIS MESSAGE: " + message);
-            if (message.getType().equals("sound")) {
+            Message msg = bufMessage.get(index);
+            System.out.println("THIS MESSAGE: " + msg);
+            if (msg.getType().equals("sound")) {
                 try {
-                    VoicePlayback.playAudio(Compression.toByteArray(Listener.getSound(message)));
-                } catch (IOException e) {
+                    String musicFile = "src/main/resources/tmpsound/record-" + msg.getSender() + "-" + msg.getReceiver() + "-" + String.valueOf(msg.getDate() / 1000) + ".wave";
+                    File file = new File(musicFile);
+
+                    if (!file.exists()) {
+                        /*String sound = Listener.getSound(msg);
+                        AudioClip a = new AudioClip(new File(sound).toURI().toString());
+                        System.out.println("Audio clip not exist");
+                        a.play();*/
+                        musicFile = Listener.getSound(msg);
+                    } else {
+                    }
+                    Media media = new Media(new File(musicFile).toURI().toString());
+                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    mediaPlayer.play();
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -351,6 +399,7 @@ public class ChatController implements Initializable {
                 ke.consume();
             }
         });
+        recorder = new Recorder();
     }
 
     @FXML
@@ -362,6 +411,9 @@ public class ChatController implements Initializable {
                     return;
                 }
                 reciver = listViewDialog.getSelectionModel().getSelectedItem().getSecond();
+                User user = GetUserInformation.getInformation(reciver);
+                loginReciver.setText(user.getLogin());
+                imgReciver.setImage(SwingFXUtils.toFXImage(GetUserInformation.getPictureFullSize(reciver),null));
                 resetTimer();
                 timer = new Timer();
                 TimerTask timerTask = new TimerTask() {
@@ -388,9 +440,14 @@ public class ChatController implements Initializable {
         vBoxCenter.setVisible(true);
         Platform.runLater(() -> {
             if (!listViewUsers.getItems().isEmpty()) {
-                if (listViewDialog.getSelectionModel().getSelectedItem() == null) {
+                if (listViewUsers.getSelectionModel().getSelectedItem() == null) {
                     return;
                 }
+                System.out.println("user");
+                reciver = listViewUsers.getSelectionModel().getSelectedItem().getLogin();
+                User user = GetUserInformation.getInformation(reciver);
+                loginReciver.setText(user.getLogin());
+                imgReciver.setImage(SwingFXUtils.toFXImage(GetUserInformation.getPictureFullSize(reciver),null));
                 resetTimer();
                 timer = new Timer();
                 TimerTask timerTask = new TimerTask() {
@@ -422,6 +479,9 @@ public class ChatController implements Initializable {
 
     public void setListSearchList(ArrayList<User> list) {
         Platform.runLater(() -> {
+            if (!listViewUsers.getItems().isEmpty()) {
+                listViewUsers.getItems().removeAll();
+            }
             usersList = FXCollections.observableList(list);
             listViewUsers.setItems(usersList);
             listViewUsers.setCellFactory(new CellRenderUser());

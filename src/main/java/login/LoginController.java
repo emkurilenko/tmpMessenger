@@ -76,7 +76,7 @@ public class LoginController {
             connection.setReadTimeout(250);
 
             connection.connect();
-
+            System.out.println(connection.getResponseCode());
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 List<String> cookies = connection.getHeaderFields().get(CookiesWork.COOKIES_HEADER);
                 String[] vals = cookies.get(0).split("=");

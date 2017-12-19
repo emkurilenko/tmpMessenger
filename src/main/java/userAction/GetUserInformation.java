@@ -28,6 +28,9 @@ public class GetUserInformation {
             user = new Gson().fromJson(inputLine, User.class);
             in.close();
             connection.disconnect();
+            if(code!=HttpURLConnection.HTTP_OK){
+                Consts.showErrorDialog("Error","");
+            }
         } catch (Exception e) {
             System.out.println("err getInformation");
         } finally {
