@@ -291,4 +291,27 @@ public class Listener implements Runnable {
         }
         return list;
     }
+
+    public static void setFriend(String login,String param){
+        HttpURLConnection connection = null;
+        URL url;
+        try {
+            url = new URL(Consts.URL+ "?operation=addFriend&second=" + login + "&add=" + param);
+            connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Cookie", CookiesWork.cookie);
+            connection.setRequestProperty("Cache-Control", "no-cache");
+            int code = connection.getResponseCode();
+            connection.disconnect();
+            if(code != HttpURLConnection.HTTP_OK){
+                Consts.showErrorDialog("Error","Ошибка добавления в друзья.");
+            }
+        }
+        catch (Exception e){
+        }
+        finally {
+            if(connection!=null)
+                connection.disconnect();
+        }
+    }
 }

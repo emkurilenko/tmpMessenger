@@ -77,11 +77,11 @@
       </HBox>
    </top>
    <left>
-      <VBox prefHeight="540.0" prefWidth="250.0" style="-fx-background-color:: transparent;" BorderPane.alignment="CENTER">
+      <VBox prefHeight="540.0" prefWidth="250.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
          <children>
             <HBox prefHeight="65.0" prefWidth="250.0">
                <children>
-                  <JFXButton fx:id="btnDialog" onMouseClicked="#clickBtnDialog" prefHeight="65.0" prefWidth="125.0" text=" " textAlignment="CENTER">
+                  <JFXButton fx:id="btnDialog" contentDisplay="TOP" onMouseClicked="#clickBtnDialog" prefHeight="65.0" prefWidth="125.0" text="Диалоги " textAlignment="CENTER">
                      <graphic>
                         <ImageView fitHeight="35.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -90,10 +90,10 @@
                         </ImageView>
                      </graphic>
                      <font>
-                        <Font size="1.0" />
+                        <Font name="Comic Sans MS" size="12.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="btnContacts" onMouseClicked="#btnClickContacts" prefHeight="65.0" prefWidth="125.0" text=" ">
+                  <JFXButton fx:id="btnContacts" contentDisplay="TOP" onMouseClicked="#btnClickContacts" prefHeight="65.0" prefWidth="125.0" text="Контакты">
                      <graphic>
                         <ImageView fitHeight="35.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -102,7 +102,7 @@
                         </ImageView>
                      </graphic>
                      <font>
-                        <Font size="1.0" />
+                        <Font name="Comic Sans MS" size="12.0" />
                      </font>
                   </JFXButton>
                </children>
@@ -112,7 +112,7 @@
             </HBox>
             <Pane prefHeight="470.0" prefWidth="250.0">
                <children>
-                  <ListView fx:id="listViewDialog" onMouseClicked="#listViewDialogListener" prefHeight="485.0" prefWidth="250.0" style="-fx-border-image-width: 0;" stylesheets="@../styles/ListViewStyle.css" />
+                  <ListView fx:id="listViewDialog" onMouseClicked="#listViewDialogListener" prefHeight="485.0" prefWidth="250.0" style="-fx-border-image-width: 0;" />
                   <VBox fx:id="SearchPanel" prefHeight="485.0" prefWidth="250.0">
                      <children>
                         <HBox prefHeight="30.0" prefWidth="220.0">
@@ -136,7 +136,7 @@
                               </JFXButton>
                            </children>
                         </HBox>
-                        <ListView fx:id="listViewUsers" onMouseClicked="#listViewUsersListener" prefHeight="455.0" prefWidth="250.0" style="-fx-border-image-width: 0;" stylesheets="@../styles/ListViewStyle.css" />
+                        <ListView fx:id="listViewUsers" onMouseClicked="#listViewUsersListener" prefHeight="455.0" prefWidth="250.0" style="-fx-border-image-width: 0;" />
                      </children>
                   </VBox>
                </children>
@@ -149,7 +149,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="74.0" prefWidth="790.0" style="-fx-background-color: #cccccc;">
                <children>
-                  <JFXButton onMouseClicked="#btnHideDialogListener" text="Скрыть">
+                  <JFXButton contentDisplay="TOP" onMouseClicked="#btnHideDialogListener" text="Скрыть" textAlignment="CENTER">
                      <graphic>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -161,11 +161,26 @@
                         <Insets left="10.0" />
                      </HBox.margin>
                   </JFXButton>
-                  <JFXButton onMouseClicked="#btnRefreshListener" text="Refresh">
+                  <JFXButton contentDisplay="TOP" onMouseClicked="#btnRefreshListener" text="Refresh" textAlignment="CENTER">
                      <graphic>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/if_update_172618.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="btnAddFriend" alignment="CENTER" contentDisplay="TOP" onMouseClicked="#btnFriendListener" text="Добавить в друзья" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets left="325.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fx:id="btnImageFriend" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/if_user_half_add.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -175,7 +190,7 @@
                         <Font name="SansSerif Regular" size="14.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="400.0" />
+                        <Insets left="10.0" />
                      </HBox.margin>
                   </Text>
                   <ImageView fx:id="imgReciver" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
@@ -196,7 +211,14 @@
                         <Font name="SansSerif Regular" size="14.0" />
                      </font>
                   </TextArea>
-                  <JFXButton fx:id="buttonSend" buttonType="RAISED" onAction="#sendButtonAction" onMouseClicked="#btnSendMessage" prefHeight="60.0" prefWidth="80.0" text="Send" textAlignment="CENTER" HBox.hgrow="NEVER" />
+                  <JFXButton fx:id="buttonSend" buttonType="RAISED" contentDisplay="TOP" onAction="#sendButtonAction" onMouseClicked="#btnSendMessage" prefHeight="60.0" prefWidth="80.0" text="Send" textAlignment="CENTER" HBox.hgrow="NEVER">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/if_send-o_1608418.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></JFXButton>
                   <JFXButton fx:id="btnRecord" alignment="CENTER" contentDisplay="CENTER" onMousePressed="#recordVoiceMessage" prefHeight="60.0" text=" " textAlignment="JUSTIFY">
                      <graphic>
                         <ImageView fx:id="microphoneImageView" fitHeight="30.0" fitWidth="30.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">

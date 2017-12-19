@@ -1,8 +1,10 @@
 package userAction;
 
+import com.jfoenix.controls.JFXDialog;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 
 import javax.imageio.ImageIO;
@@ -50,7 +52,4 @@ public class Consts {
             alert.showAndWait();
         });
     }
-
-
-
 }

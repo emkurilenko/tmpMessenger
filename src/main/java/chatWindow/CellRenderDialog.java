@@ -3,7 +3,6 @@ package chatWindow;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -15,8 +14,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import userAction.Dialog;
-import userAction.GetUserInformation;
-import userAction.User;
 
 import java.util.Date;
 
@@ -80,8 +77,6 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
                             hBox.getChildren().addAll(imageView, vBox, dateText);
                         }
                         //hBox.getChildren().addAll(vBox, dateText);
-
-                        hBox.setPadding(new Insets(5, 10, 5, 10));
                         hBox.setAlignment(Pos.CENTER_LEFT);
                         setGraphic(hBox);
                     } catch (Exception e) {
