@@ -1,46 +1,44 @@
 package chatWindow;
 
-import chatWindow.CellRenderDialog;
-import chatWindow.CellRenderUser;
-import javafx.concurrent.Task;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import login.Main;
-import until.*;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import login.Main;
+import until.VoicePlayback;
+import until.VoiceRecorder;
+import until.VoiceUtil;
 import until.bubble.BubbleSpec;
 import until.bubble.BubbledLabel;
 import userAction.*;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
@@ -87,15 +85,13 @@ public class ChatController implements Initializable {
     @FXML
     private JFXButton btnEditProfile;
 
-
     private ObservableList<User> usersList;
     private ObservableList<Dialog> dialogsList;
-    private ObservableList<Message> messagesList;
+    private ArrayList<Message> listMessage;
 
     private String reciver;
     private long lastUpdate;
     private ArrayList<Message> bufMessage;
-    private long lastTimeEnter;
     private Timer timer;
     private boolean firstTime = true;
 
@@ -170,9 +166,10 @@ public class ChatController implements Initializable {
 
                 }
                 if (msg.getType().equals("sound")) {
+                    bl6.setText("Sent a voice message!");
                     ImageView imageview = new ImageView(new Image(getClass().getClassLoader().getResource("images/sound.png").toString()));
                     bl6.setGraphic(imageview);
-                    bl6.setText("Sent a voice message!");
+
                     System.out.println("rec sound");
                     // VoicePlayback.playAudio(Consts.toByteArray(Listener.getSound(msg)));
                 }
@@ -198,8 +195,8 @@ public class ChatController implements Initializable {
                     bl6.setText(msg.getMessage());
                 }
                 if (msg.getType().equals("sound")) {
-                    bl6.setGraphic(new ImageView(new Image(getClass().getClassLoader().getResource("images/sound.png").toString())));
                     bl6.setText("Sent a voice message!");
+                    bl6.setGraphic(new ImageView(new Image(getClass().getClassLoader().getResource("images/sound.png").toString())));
                     System.out.println("sound my");
                     // VoicePlayback.playAudio(Consts.toByteArray(Listener.getSound(msg)));
                 }
@@ -228,10 +225,27 @@ public class ChatController implements Initializable {
         }
         t2.setDaemon(true);
         t2.start();
+        Platform.runLater(() -> {
+            chatPane.scrollTo(bufMessage.size() - 1);
+        });
     }
 
     public void setImageUser(BufferedImage imageUser) {
         this.imageUser.setImage(SwingFXUtils.toFXImage(imageUser, null));
+    }
+
+    @FXML
+    void btnRefreshListener(MouseEvent event) {
+        Platform.runLater(() -> {
+            listMessage = Listener.getMessage(reciver, String.valueOf(firstTime));
+        });
+    }
+
+    @FXML
+    void btnHideDialogListener(MouseEvent event) {
+        Platform.runLater(() -> {
+            vBoxCenter.setVisible(false);
+        });
     }
 
     public void setTextLogin(String textLogin) {
@@ -255,8 +269,7 @@ public class ChatController implements Initializable {
         String text = textFieldSearch.getText();
         if (!text.isEmpty()) {
             Platform.runLater(() -> {
-                SearchUser.allUser(text);
-                setListSearchList(SearchUser.getList());
+                setListSearchList(Listener.getAllSearchUser(text));
             });
         }
     }
@@ -289,6 +302,13 @@ public class ChatController implements Initializable {
     }
 
     @FXML
+    void btnClickContacts(MouseEvent event) {
+        chatPane.getItems().clear();
+        SearchPanel.setVisible(true);
+        listViewDialog.setVisible(false);
+    }
+
+    @FXML
     void clickBtnDialog(MouseEvent event) {
         setDialogsList(Listener.getDialog());
         chatPane.getItems().clear();
@@ -297,14 +317,27 @@ public class ChatController implements Initializable {
     }
 
     @FXML
-    void btnClickContacts(MouseEvent event) {
-        chatPane.getItems().clear();
-        SearchPanel.setVisible(true);
-        listViewDialog.setVisible(false);
+    void chooseMessage(MouseEvent event){
+        Platform.runLater(() -> {
+            System.out.println("CHECK +++++++++++++++++++++++");
+            int index = chatPane.getSelectionModel().getSelectedIndex();
+            System.out.println(index);
+            Message message = bufMessage.get(index);
+            System.out.println("THIS MESSAGE: " + message);
+            if (message.getType().equals("sound")) {
+                try {
+                    VoicePlayback.playAudio(Compression.toByteArray(Listener.getSound(message)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        vBoxCenter.setVisible(false);
         listViewDialog.setVisible(true);
         SearchPanel.setVisible(false);
         bufMessage = new ArrayList<Message>();
@@ -321,35 +354,43 @@ public class ChatController implements Initializable {
     }
 
     @FXML
-    void listViewDialogListener(MouseEvent event) {
+    void listViewDialogListener() {
+        vBoxCenter.setVisible(true);
         Platform.runLater(() -> {
             if (!listViewDialog.getItems().isEmpty()) {
+                if (listViewDialog.getSelectionModel().getSelectedItem() == null) {
+                    return;
+                }
                 reciver = listViewDialog.getSelectionModel().getSelectedItem().getSecond();
                 resetTimer();
                 timer = new Timer();
-                System.out.println(String.valueOf(firstTime));
                 TimerTask timerTask = new TimerTask() {
                     @Override
                     public void run() {
+                        listMessage = Listener.getMessage(reciver, String.valueOf(firstTime));
                         for (Message msg :
-                                Listener.getMessage(reciver, String.valueOf(firstTime))) {
+                                listMessage) {
                             addToChat(msg);
                             System.out.println(msg);
+                            bufMessage.add(msg);
                         }
                         firstTime = false;
                     }
                 };
                 timer.schedule(timerTask, 0, 1500);
             }
+
         });
     }
 
     @FXML
     void listViewUsersListener(MouseEvent event) {
+        vBoxCenter.setVisible(true);
         Platform.runLater(() -> {
             if (!listViewUsers.getItems().isEmpty()) {
-                reciver = listViewUsers.getSelectionModel().getSelectedItem().getLogin();
-                System.out.println(reciver);
+                if (listViewDialog.getSelectionModel().getSelectedItem() == null) {
+                    return;
+                }
                 resetTimer();
                 timer = new Timer();
                 TimerTask timerTask = new TimerTask() {
@@ -358,6 +399,7 @@ public class ChatController implements Initializable {
                         for (Message msg :
                                 Listener.getMessage(reciver, String.valueOf(firstTime))) {
                             addToChat(msg);
+                            bufMessage.add(msg);
                         }
                         firstTime = false;
                     }
@@ -374,6 +416,7 @@ public class ChatController implements Initializable {
             chatPane.getItems().clear();
             lastUpdate = 0;
             firstTime = true;
+            bufMessage.clear();
         }
     }
 

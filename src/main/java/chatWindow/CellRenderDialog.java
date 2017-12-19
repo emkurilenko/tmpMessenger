@@ -21,6 +21,7 @@ import userAction.User;
 import java.util.Date;
 
 public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dialog>> {
+    Image statusImage = new Image(getClass().getClassLoader().getResource("images/online.png").toString(), 16, 16, true, true);
     @Override
     public ListCell<Dialog> call(ListView<Dialog> p) {
 
@@ -35,7 +36,10 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
                     try {
                         HBox hBox = new HBox();
 
-                        Text second = new Text(dlg.getSecond());
+                        ImageView statusImageView = new ImageView();
+                        statusImageView.setImage(statusImage);
+
+                        Text second = new Text(dlg.getName());
                         second.setFont(Font.font("SansSerif Regular", 16));
                         second.setFill(Color.valueOf("#01579B"));
 
@@ -70,8 +74,11 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
                         VBox vBox = new VBox();
 
                         vBox.getChildren().addAll(second, lastMessage);
-
-                        hBox.getChildren().addAll(imageView, vBox, dateText);
+                        if(dlg.isOnline()){
+                            hBox.getChildren().addAll(statusImageView,imageView, vBox, dateText);
+                        }else {
+                            hBox.getChildren().addAll(imageView, vBox, dateText);
+                        }
                         //hBox.getChildren().addAll(vBox, dateText);
 
                         hBox.setPadding(new Insets(5, 10, 5, 10));

@@ -29,19 +29,15 @@ public class CellRenderUser implements Callback<ListView<User>, ListCell<User>> 
 
                         Text name = new Text(user.getName() + " " + user.getSurname());
                         ImageView imageView = new ImageView();
-//                        imageView.setFitHeight(40);
-//                        imageView.setFitWidth(40);
-//                        imageView.setSmooth(true);
-//                        imageView.setPreserveRatio(true);
-                            ImageView statusImageView = new ImageView();
-                            Image statusImage = new Image(getClass().getClassLoader().getResource("images/online.png").toString(), 16, 16, true, true);
-                            statusImageView.setImage(statusImage);
+                        ImageView statusImageView = new ImageView();
+                        Image statusImage = new Image(getClass().getClassLoader().getResource("images/online.png").toString(), 16, 16, true, true);
+                        statusImageView.setImage(statusImage);
 
                         Image image = SwingFXUtils.toFXImage(user.getPicture(), null);
                         imageView.setImage(image);
-                        if(user.isOnline()){
-                            vBox.getChildren().addAll(imageView, name,statusImageView);
-                        }else {
+                        if (user.isOnline()) {
+                            vBox.getChildren().addAll(imageView, name, statusImageView);
+                        } else {
                             vBox.getChildren().addAll(imageView, name);
                         }
                         vBox.setAlignment(Pos.CENTER_LEFT);

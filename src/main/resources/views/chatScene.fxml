@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="620.0" maxWidth="1040.0" prefHeight="620.0" prefWidth="1040.0" style="-fx-background-color: #FAFAFA;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chatWindow.ChatController">
+<BorderPane maxHeight="620.0" maxWidth="1040.0" prefHeight="620.0" prefWidth="1040.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chatWindow.ChatController">
    <top>
       <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #583989;" BorderPane.alignment="CENTER">
          <children>
@@ -77,7 +77,7 @@
       </HBox>
    </top>
    <left>
-      <VBox prefHeight="540.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="540.0" prefWidth="250.0" style="-fx-background-color:: transparent;" BorderPane.alignment="CENTER">
          <children>
             <HBox prefHeight="65.0" prefWidth="250.0">
                <children>
@@ -112,7 +112,7 @@
             </HBox>
             <Pane prefHeight="470.0" prefWidth="250.0">
                <children>
-                  <ListView fx:id="listViewDialog" onMouseClicked="#listViewDialogListener" prefHeight="485.0" prefWidth="250.0" />
+                  <ListView fx:id="listViewDialog" onMouseClicked="#listViewDialogListener" prefHeight="485.0" prefWidth="250.0" style="-fx-border-image-width: 0;" stylesheets="@../styles/ListViewStyle.css" />
                   <VBox fx:id="SearchPanel" prefHeight="485.0" prefWidth="250.0">
                      <children>
                         <HBox prefHeight="30.0" prefWidth="220.0">
@@ -136,7 +136,7 @@
                               </JFXButton>
                            </children>
                         </HBox>
-                        <ListView fx:id="listViewUsers" onMouseClicked="#listViewUsersListener" prefHeight="455.0" prefWidth="250.0" />
+                        <ListView fx:id="listViewUsers" onMouseClicked="#listViewUsersListener" prefHeight="455.0" prefWidth="250.0" style="-fx-border-image-width: 0;" stylesheets="@../styles/ListViewStyle.css" />
                      </children>
                   </VBox>
                </children>
@@ -145,29 +145,50 @@
       </VBox>
    </left>
    <center>
-      <VBox fx:id="vBoxCenter" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="vBoxCenter" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="790.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="74.0" prefWidth="790.0" style="-fx-background-color: #cccccc;">
                <children>
-                  <Text fx:id="textLoginSobes" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+                  <JFXButton onMouseClicked="#btnHideDialogListener" text="Скрыть">
+                     <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/if_forward_172470.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton onMouseClicked="#btnRefreshListener" text="Refresh">
+                     <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/if_update_172618.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <Text fx:id="loginReciver" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="loginReciver">
                      <font>
                         <Font name="SansSerif Regular" size="14.0" />
                      </font>
                      <HBox.margin>
-                        <Insets top="10.0" />
+                        <Insets left="400.0" />
                      </HBox.margin>
                   </Text>
-                  <ImageView fx:id="imgSobes" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="imgReciver" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/default.png" />
                      </image>
                      <HBox.margin>
-                        <Insets left="10.0" right="40.0" top="5.0" />
+                        <Insets left="15.0" />
                      </HBox.margin>
                   </ImageView>
                </children>
             </HBox>
-            <ListView fx:id="chatPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="429.0" prefWidth="790.0" />
+            <ListView fx:id="chatPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#chooseMessage" prefHeight="429.0" prefWidth="790.0" />
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="49.0" minWidth="100.0" prefHeight="60.0" prefWidth="790.0">
                <children>
                   <TextArea fx:id="messageBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="100.0" nodeOrientation="LEFT_TO_RIGHT" onKeyPressed="#sendMethod" prefHeight="50.0" prefWidth="587.0" promptText="Enter Message..." scaleShape="false" HBox.hgrow="ALWAYS">

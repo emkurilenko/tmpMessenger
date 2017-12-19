@@ -151,7 +151,7 @@ public class Listener implements Runnable {
         return bufMessages;
     }
 
-    public static InputStream getSound(Message msg) {
+    public synchronized static InputStream getSound(Message msg) {
         InputStream is = null;
         HttpURLConnection connection = null;
         URL url;
@@ -162,7 +162,9 @@ public class Listener implements Runnable {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Cookie", CookiesWork.cookie);
+            int code = connection.getResponseCode();
             is = connection.getInputStream();
+            System.out.println("GET SOUND " + code);
             connection.disconnect();
         } catch (Exception e) {
         } finally {
@@ -202,5 +204,45 @@ public class Listener implements Runnable {
             dlg.setPicture(GetUserInformation.getPictureSmallSize(dlg.getSecond()));
         }
         return allDialog;
+    }
+
+    public static ArrayList<User> getAllSearchUser(String search) {
+        ArrayList<User> list = new ArrayList<>();
+        ArrayList<User> buf = new ArrayList();
+        HttpURLConnection connection = null;
+        URL url;
+        try {
+            url = new URL(Consts.URL + "?operation=search&value=" + search);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Cookie", CookiesWork.cookie);
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream(), "windows-1251"));
+            String json = in.readLine();
+            in.close();
+            connection.disconnect();
+            buf = new Gson().fromJson(json, new TypeToken<ArrayList<User>>() {
+            }.getType());
+            int code = connection.getResponseCode();
+            if(code!=HttpURLConnection.HTTP_OK){
+                Consts.showErrorDialog("Error connection", "Ошибка поиска пользователей.");
+                return null;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (connection != null)
+                connection.disconnect();
+        }
+
+        for (User us :
+                buf) {
+            if (us.getLogin().equals(CookiesWork.cookie)) {
+                continue;
+            } else {
+                us.setPicture(GetUserInformation.getPictureSmallSize(us.getLogin()));
+                list.add(us);
+            }
+        }
+        return list;
     }
 }
