@@ -58,7 +58,6 @@ public class GetUserInformation {
                 InputStream is = connection.getInputStream();
                 bi = ImageIO.read(is);
                 if (bi == null) {
-                    System.out.println("error code");
                     bi = ImageIO.read(isa);
                     is.close();
                     isa.close();
@@ -104,17 +103,14 @@ public class GetUserInformation {
                 bi = ImageIO.read(is);
                 if (bi == null) {
                     InputStream isa = new FileInputStream("src/main/resources/images/default.png");
-                    System.out.println("file found 1");
                     connection.disconnect();
                     bi = ImageIO.read(isa);
                 } else {
-                    System.out.println("else");
                     connection.disconnect();
-                    return bi;
+                    return Compression.createResizedCopy(bi,100,100,true);
                 }
             } else {
                 InputStream isa = new FileInputStream("src/main/resources/images/default.png");
-                System.out.println("file found 2");
                 connection.disconnect();
                 bi = ImageIO.read(isa);
             }

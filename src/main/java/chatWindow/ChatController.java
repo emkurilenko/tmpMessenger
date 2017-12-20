@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+import static login.Main.deleteAllFilesFolder;
+
 public class ChatController implements Initializable {
     @FXML
     private ImageView imageUser;
@@ -195,17 +197,15 @@ public class ChatController implements Initializable {
 
                 }
                 if (msg.getType().equals("sound")) {
-                    bl6.setText("Sent a voice message!");
+                    bl6.setText(msg.getSender() + ": " + "Голосовое сообщение!");
                     ImageView imageview = new ImageView(new Image(getClass().getClassLoader().getResource("images/sound.png").toString()));
                     bl6.setGraphic(imageview);
-
-                    System.out.println("rec sound");
-                    // VoicePlayback.playAudio(Consts.toByteArray(Listener.getSound(msg)));
                 }
-                bl6.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+                bl6.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
                 HBox x = new HBox();
                 bl6.setBubbleSpec(BubbleSpec.FACE_LEFT_CENTER);
                 x.getChildren().addAll(dateText, bl6);
+                x.setAlignment(Pos.CENTER_LEFT);
                 // x.getChildren().addAll(bl6);
                 return x;
             }
@@ -224,10 +224,8 @@ public class ChatController implements Initializable {
                     bl6.setText(msg.getMessage());
                 }
                 if (msg.getType().equals("sound")) {
-                    bl6.setText("Sent a voice message!");
+                    bl6.setText("Голосовое сообщение!");
                     bl6.setGraphic(new ImageView(new Image(getClass().getClassLoader().getResource("images/sound.png").toString())));
-                    System.out.println("sound my");
-                    // VoicePlayback.playAudio(Consts.toByteArray(Listener.getSound(msg)));
                 }
                 bl6.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,
                         null, null)));
@@ -236,7 +234,7 @@ public class ChatController implements Initializable {
                 x.setAlignment(Pos.TOP_RIGHT);
                 bl6.setBubbleSpec(BubbleSpec.FACE_RIGHT_CENTER);
                 x.getChildren().addAll(bl6, dateText);
-
+                x.setAlignment(Pos.CENTER_RIGHT);
                 return x;
             }
         };
@@ -308,6 +306,9 @@ public class ChatController implements Initializable {
     void sendButtonAction() throws IOException {
         Platform.runLater(() -> {
             String msg = messageBox.getText();
+            if(messageBox.getText().length()>199){
+                Consts.showErrorDialog("Ошибка!","Превышен лимит длины сообщения. Лимит 200 символов!");
+            }
             if (!messageBox.getText().isEmpty()) {
                 Message message = new Message(CookiesWork.cookie, reciver, msg, "text", Calendar.getInstance().getTimeInMillis());
                 Listener.send(message);
@@ -368,7 +369,6 @@ public class ChatController implements Initializable {
                 Listener.setFriend(chooseUser.getLogin(), String.valueOf(true));
                 btnAddFriend.setText("Добавить в друзья");
                 chooseUser = GetUserInformation.getInformation(chooseUser.getLogin());
-
             }
         });
     }
@@ -437,17 +437,17 @@ public class ChatController implements Initializable {
             }
         });
         recorder = new Recorder();
+
     }
 
     @FXML
     void listViewDialogListener() {
-        vBoxCenter.setVisible(true);
-
         Platform.runLater(() -> {
             if (!listViewDialog.getItems().isEmpty()) {
                 if (listViewDialog.getSelectionModel().getSelectedItem() == null) {
                     return;
                 }
+                vBoxCenter.setVisible(true);
                 reciver = listViewDialog.getSelectionModel().getSelectedItem().getSecond();
                 setReciverInformation(reciver);
                 resetTimer();
@@ -482,13 +482,13 @@ public class ChatController implements Initializable {
 
     @FXML
     void listViewUsersListener(MouseEvent event) {
-        vBoxCenter.setVisible(true);
+
         Platform.runLater(() -> {
             if (!listViewUsers.getItems().isEmpty()) {
                 if (listViewUsers.getSelectionModel().getSelectedItem() == null) {
                     return;
                 }
-                System.out.println("user");
+                vBoxCenter.setVisible(true);
                 reciver = listViewUsers.getSelectionModel().getSelectedItem().getLogin();
                 setReciverInformation(reciver);
                 resetTimer();
@@ -535,6 +535,11 @@ public class ChatController implements Initializable {
             bufMessage.clear();
         }
         endThreadAddMessage();
+    }
+
+    @FXML
+    void pressedImageUser(MouseEvent event) {
+        btnEditProfileListener(event);
     }
 
     public void setListSearchList(ArrayList<User> list) {

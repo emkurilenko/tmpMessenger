@@ -18,10 +18,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import until.SHA;
-import userAction.CheckInput;
-import userAction.Compression;
-import userAction.Consts;
-import userAction.CookiesWork;
+import userAction.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -61,13 +58,13 @@ public class RegisterController {
 
     @FXML
     void btnCancel(MouseEvent event) throws IOException {
-        newScene(event, "views/loginScene.fxml", "Login");
+        newScene(event, "views/LoginView.fxml", "Login");
     }
 
     @FXML
     void btnRegister(MouseEvent event) throws Exception {
         if (!Consts.checkConnection()) {
-            Consts.showErrorDialog("Error connection!", "No connection to the server.");
+            Consts.showErrorDialog("Error connection!", "Нет соеденения с сервером.");
             return;
         }
         name = idName.getText();
@@ -87,14 +84,15 @@ public class RegisterController {
         name = CheckInput.firstUpperCase(name);
         secondName = CheckInput.firstUpperCase(secondName);
 
-        if (check && (!CheckInput.checkForInputName(name) || !CheckInput.checkForInputName(secondName))) {
-            Consts.showErrorDialog("Error Input", "Check input!");
+        if (check && (!CheckInput.checkForInputName(name) || !CheckInput.checkForInputName(secondName) ||
+                !CheckInput.checkForLogin(login) || !CheckInput.checkPassword(password))) {
+            Consts.showErrorDialog("Error Input", "Ошибка ввода");
             return;
         }
         if (fileImage != null) {
             try {
                 byte[] imageInByte;
-                BufferedImage original = Compression.compress(ImageIO.read(fileImage), 0.5f);
+                BufferedImage original = Compression.compress(ImageIO.read(fileImage), 0.6f);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
                 ImageIO.write(original, "jpg", baos);
@@ -142,7 +140,7 @@ public class RegisterController {
                 CookiesWork.cookie = vals[1];
                 connection.disconnect();
                 System.out.println(CookiesWork.cookie);
-                newScene(event, "views/chatScene.fxml", "MessengerPSU");
+                newScene(event, "views/chatScene.fxml", "Мессенджер");
             } else if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
                 Consts.showErrorDialog(null, "The login may already be busy.");
                 return;
@@ -160,17 +158,16 @@ public class RegisterController {
     @FXML
     void btnChoice(MouseEvent event) {
         FileChooser fc = new FileChooser();
-        fc.setTitle("Choice picture");
+        fc.setTitle("Выбор картинки");
         FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
         fc.getExtensionFilters().addAll(extFilterJPG);
         fileImage = fc.showOpenDialog(null);
         if (fileImage != null) {
             try {
-                BufferedImage bufferedImage = ImageIO.read(fileImage);
-                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+                BufferedImage buffered = Compression.createResizedCopy(ImageIO.read(fileImage), 100, 100, true);
+                Image image = SwingFXUtils.toFXImage(buffered, null);
                 img.setImage(image);
             } catch (IOException ex) {
-                //ex.printStackTrace();
                 fileImage = null;
             }
         }
@@ -190,7 +187,7 @@ public class RegisterController {
         Stage stage = new Stage();
         stage.setTitle(name);
         stage.setScene(scene);
-        stage.getIcons().add(new Image(getClass().getClassLoader().getResource("images/plug.png").toString()));
+        stage.getIcons().add(new Image(getClass().getClassLoader().getResource("images/iconMessanger.png").toString()));
         stage.setResizable(false);
         stage.show();
     }

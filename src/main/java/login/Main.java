@@ -17,16 +17,16 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStageObj = primaryStage;
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/loginScene.fxml"));
-        primaryStage.setTitle("MessengerPSU");
-        primaryStage.getIcons().add(new Image(getClass().getClassLoader().getResource("images/plug.png").toString()));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/LoginView.fxml"));
+        primaryStage.setTitle("Мессенджер");
+        primaryStage.getIcons().add(new Image(getClass().getClassLoader().getResource("images/iconMessanger.png").toString()));
         Scene mainScene = new Scene(root);
         primaryStage.setResizable(false);
         primaryStage.setScene(mainScene);
-        //primaryStage.initStyle(StageStyle.UNDECORATED);
 
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
+            deleteAllFilesFolder("src/main/resources/tmpsound/");
             Platform.exit();
             System.exit(0);
         });
@@ -43,8 +43,15 @@ public class Main extends Application {
 
     @Override
     public void stop() {
-        Platform.exit();
-        System.exit(0);
+
+    }
+
+
+
+    public static void deleteAllFilesFolder(String path) {
+        for (File myFile : new File(path).listFiles()) {
+            if (myFile.isFile()) myFile.delete();
+        }
     }
 }
 

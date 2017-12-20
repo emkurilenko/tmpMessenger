@@ -13,27 +13,27 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.RegisterController">
    <children>
-      <VBox prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #FFFFFF;">
+      <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #FFFFFF;">
          <children>
             <ImageView fx:id="img" fitHeight="100.0" fitWidth="100.0" focusTraversable="true" onMouseClicked="#btnChoice" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/default.png" />
                </image>
                <VBox.margin>
-                  <Insets left="150.0" top="10.0" />
+                  <Insets top="10.0" />
                </VBox.margin>
             </ImageView>
-            <JFXTextField fx:id="idLogin" alignment="CENTER" labelFloat="true" promptText="Login">
+            <JFXTextField fx:id="idLogin" alignment="CENTER" labelFloat="true" promptText="Логин">
                <font>
-                  <Font name="Times New Roman" size="14.0" />
+                  <Font name="SansSerif Regular" size="14.0" />
                </font>
                <VBox.margin>
                   <Insets left="50.0" right="50.0" top="20.0" />
                </VBox.margin>
             </JFXTextField>
-            <JFXPasswordField fx:id="idPass" alignment="CENTER" labelFloat="true" promptText="Password">
+            <JFXPasswordField fx:id="idPass" alignment="CENTER" labelFloat="true" promptText="Пароль">
                <font>
-                  <Font name="Times New Roman" size="14.0" />
+                  <Font name="SansSerif Regular" size="14.0" />
                </font>
                <VBox.margin>
                   <Insets left="50.0" right="50.0" top="20.0" />
@@ -41,7 +41,7 @@
             </JFXPasswordField>
             <JFXTextField fx:id="idName" alignment="CENTER" labelFloat="true" promptText="Имя">
                <font>
-                  <Font name="Times New Roman" size="14.0" />
+                  <Font name="SansSerif Regular" size="14.0" />
                </font>
                <VBox.margin>
                   <Insets left="50.0" right="50.0" top="20.0" />
@@ -49,25 +49,25 @@
             </JFXTextField>
             <JFXTextField fx:id="idSecondName" alignment="CENTER" labelFloat="true" promptText="Фамилия">
                <font>
-                  <Font name="Times New Roman" size="14.0" />
+                  <Font name="SansSerif Regular" size="14.0" />
                </font>
                <VBox.margin>
                   <Insets left="50.0" right="50.0" top="20.0" />
                </VBox.margin>
             </JFXTextField>
-            <HBox prefHeight="46.0" prefWidth="400.0">
+            <HBox alignment="TOP_CENTER" prefHeight="46.0" prefWidth="400.0">
                <children>
-                  <JFXButton fx:id="btnRegister" buttonType="RAISED" maxWidth="150.0" minHeight="30.0" minWidth="100.0" onMouseClicked="#btnRegister" style="-fx-background-color: #0288D1;" text="Register" textAlignment="CENTER">
+                  <JFXButton fx:id="btnRegister" buttonType="RAISED" maxWidth="150.0" minHeight="30.0" minWidth="100.0" onMouseClicked="#btnRegister" style="-fx-background-color: #0288D1;" text="Регистрация" textAlignment="CENTER" textFill="WHITE">
                      <font>
-                        <Font name="Times New Roman" size="14.0" />
+                        <Font name="SansSerif Regular" size="14.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="80.0" right="25.0" top="5.0" />
+                        <Insets right="25.0" top="5.0" />
                      </HBox.margin>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" minHeight="30.0" minWidth="100.0" onMouseClicked="#btnCancel" style="-fx-background-color: #0288D1;" text="Cancel">
+                  <JFXButton buttonType="RAISED" minHeight="30.0" minWidth="100.0" onMouseClicked="#btnCancel" style="-fx-background-color: #0288D1;" text="Отмена" textFill="WHITE">
                      <font>
-                        <Font name="Times New Roman" size="14.0" />
+                        <Font name="SansSerif Regular" size="14.0" />
                      </font>
                      <HBox.margin>
                         <Insets left="25.0" top="5.0" />

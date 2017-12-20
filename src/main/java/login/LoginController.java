@@ -25,6 +25,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
+import static login.Main.primaryStageObj;
+
 public class LoginController {
     private HttpURLConnection connection = null;
     private Scene scene;
@@ -68,15 +70,13 @@ public class LoginController {
         }*/
 
         try {
-            String url = Consts.URL + "?operation=login&login=" + URLEncoder.encode(login, "UTF-8") + "&password=" +SHA.encrypt(password);
+            String url = Consts.URL + "?operation=login&login=" + URLEncoder.encode(login, "UTF-8") + "&password=" + SHA.encrypt(password);
             connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
             connection.setDefaultUseCaches(false);
-            connection.setConnectTimeout(250);
-            connection.setReadTimeout(250);
-
+/*            connection.setConnectTimeout(250);
+            connection.setReadTimeout(250);*/
             connection.connect();
-            System.out.println(connection.getResponseCode());
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 List<String> cookies = connection.getHeaderFields().get(CookiesWork.COOKIES_HEADER);
                 String[] vals = cookies.get(0).split("=");
@@ -87,17 +87,19 @@ public class LoginController {
                 FXMLLoader fmxlLoader = new FXMLLoader(getClass().getClassLoader().getResource("views/chatScene.fxml"));
                 Parent window = (Pane) fmxlLoader.load();
                 con = fmxlLoader.<ChatController>getController();
-                Listener listener  = new Listener(con);
+                Listener listener = new Listener(con);
                 Thread thread = new Thread(listener);
                 thread.start();
 
                 Scene scene = new Scene(window);
-                Stage stage = new Stage();
-                stage.getIcons().add(new Image(getClass().getClassLoader().getResource("images/plug.png").toString()));
-                stage.setTitle("MessengerPSU");
+                /*Stage stage = new Stage();
+                stage.getIcons().add(new Image(getClass().getClassLoader().getResource("images/iconMessanger.png").toString()));
+                stage.setTitle("Мессенджер");
                 stage.setScene(scene);
                 stage.setResizable(false);
-                stage.show();
+                stage.show();*/
+                primaryStageObj.setScene(scene);
+                primaryStageObj.show();
                 //Смена Активити
             } else if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
                 Consts.showErrorDialog(null, "User not found/password field.");
@@ -123,10 +125,8 @@ public class LoginController {
         (((Node) event.getSource()).getScene()).getWindow().hide();
         Parent parent = FXMLLoader.load(getClass().getClassLoader().getResource("views/registerScene.fxml"));
         Scene scene = new Scene(parent);
-        Stage stage = new Stage();
-        stage.setTitle("Register");
-        stage.setScene(scene);
-        stage.show();
+        primaryStageObj.setScene(scene);
+        primaryStageObj.show();
         // Main.primaryStage.setScene(new Scene(parent));
         // Main.primaryStage.show();
     }

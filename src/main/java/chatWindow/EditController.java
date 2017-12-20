@@ -160,8 +160,8 @@ public class EditController implements Initializable {
         Platform.runLater(() -> {
             nameUser.setText(Listener.getUser().getName());
             surnameUser.setText(Listener.getUser().getSurname());
-            BufferedImage bufferedImage = Compression.createResizedCopy(GetUserInformation.getPictureFullSize(CookiesWork.cookie), 100, 100, true);
-            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+            //BufferedImage bufferedImage = Compression.createResizedCopy(GetUserInformation.getPictureFullSize(CookiesWork.cookie), 100, 100, true);
+            Image image = SwingFXUtils.toFXImage(GetUserInformation.getPictureFullSize(CookiesWork.cookie), null);
             userImage.setImage(image);
         });
     }

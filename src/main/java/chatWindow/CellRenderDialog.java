@@ -71,6 +71,7 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
                         VBox vBox = new VBox();
 
                         vBox.getChildren().addAll(second, lastMessage);
+                        vBox.setAlignment(Pos.CENTER);
                         if(dlg.isOnline()){
                             hBox.getChildren().addAll(statusImageView,imageView, vBox, dateText);
                         }else {
