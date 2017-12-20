@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -147,7 +149,16 @@
                               </JFXButton>
                            </children>
                         </HBox>
-                        <ListView fx:id="listViewUsers" onMouseClicked="#listViewUsersListener" prefHeight="455.0" prefWidth="250.0" style="-fx-border-image-width: 0; -fx-background-color: #e7e7e7;" />
+                        <Pane prefHeight="511.0" prefWidth="250.0">
+                           <children>
+                              <ListView fx:id="listViewUsers" onMouseClicked="#listViewUsersListener" prefHeight="455.0" prefWidth="250.0" style="-fx-border-image-width: 0; -fx-background-color: #e7e7e7;" />
+                              <Label fx:id="labelNotFoundDialog" layoutX="16.0" layoutY="178.0" prefHeight="115.0" prefWidth="221.0" text="У вас нет еще диалогов. Выполните поиск." textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font name="SansSerif Regular" size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
                      </children>
                   </VBox>
                </children>
@@ -214,15 +225,20 @@
                   </ImageView>
                </children>
             </HBox>
-            <ListView fx:id="chatPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#chooseMessage" prefHeight="429.0" prefWidth="790.0" />
-            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="49.0" minWidth="100.0" prefHeight="60.0" prefWidth="790.0">
+            <HBox prefHeight="410.0" prefWidth="790.0">
                <children>
-                  <TextArea fx:id="messageBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="100.0" nodeOrientation="LEFT_TO_RIGHT" onKeyPressed="#sendMethod" prefHeight="50.0" prefWidth="587.0" promptText="Enter Message..." scaleShape="false" HBox.hgrow="ALWAYS">
+                  <JFXListView fx:id="chatPane" onMouseClicked="#chooseMessage" prefHeight="409.0" prefWidth="680.0" />
+                  <JFXListView fx:id="stikersListView" onMouseClicked="#chooseStickers" prefHeight="409.0" prefWidth="185.0" />
+               </children>
+            </HBox>
+            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="49.0" minWidth="100.0" prefHeight="64.0" prefWidth="790.0">
+               <children>
+                  <TextArea fx:id="messageBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" onKeyPressed="#sendMethod" prefHeight="59.0" prefWidth="648.0" promptText="Enter Message..." scaleShape="false" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="SansSerif Regular" size="14.0" />
                      </font>
                   </TextArea>
-                  <JFXButton fx:id="buttonSend" buttonType="RAISED" contentDisplay="TOP" onAction="#sendButtonAction" onMouseClicked="#btnSendMessage" prefHeight="60.0" prefWidth="80.0" text="Send" textAlignment="CENTER" HBox.hgrow="NEVER">
+                  <JFXButton fx:id="buttonSend" buttonType="RAISED" contentDisplay="TOP" onAction="#sendButtonAction" onMouseClicked="#btnSendMessage" prefHeight="59.0" prefWidth="117.0" text="Send" textAlignment="CENTER" HBox.hgrow="NEVER">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>

@@ -62,6 +62,10 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
                             lastMessage = new Text("sound message");
                             lastMessage.setFont(Font.font("SansSerif Regular", 14));
                         }
+                        if(dlg.getType().equals("sticker")){
+                            lastMessage = new Text("sticker");
+                            lastMessage.setFont(Font.font("SansSerif Regular", 14));
+                        }
 
                         if (dlg.isUnread()) {
                             hBox.setStyle("-fx-background-color: #fff2f2;");

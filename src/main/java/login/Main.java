@@ -26,7 +26,7 @@ public class Main extends Application {
 
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
-            deleteAllFilesFolder("src/main/resources/tmpsound/");
+         //   deleteAllFilesFolder("src/main/resources/tmpsound/");
             Platform.exit();
             System.exit(0);
         });

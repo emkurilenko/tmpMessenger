@@ -74,8 +74,6 @@ public class LoginController {
             connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
             connection.setDefaultUseCaches(false);
-/*            connection.setConnectTimeout(250);
-            connection.setReadTimeout(250);*/
             connection.connect();
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 List<String> cookies = connection.getHeaderFields().get(CookiesWork.COOKIES_HEADER);
@@ -92,12 +90,6 @@ public class LoginController {
                 thread.start();
 
                 Scene scene = new Scene(window);
-                /*Stage stage = new Stage();
-                stage.getIcons().add(new Image(getClass().getClassLoader().getResource("images/iconMessanger.png").toString()));
-                stage.setTitle("Мессенджер");
-                stage.setScene(scene);
-                stage.setResizable(false);
-                stage.show();*/
                 primaryStageObj.setScene(scene);
                 primaryStageObj.show();
                 //Смена Активити
@@ -127,8 +119,6 @@ public class LoginController {
         Scene scene = new Scene(parent);
         primaryStageObj.setScene(scene);
         primaryStageObj.show();
-        // Main.primaryStage.setScene(new Scene(parent));
-        // Main.primaryStage.show();
     }
 
 }

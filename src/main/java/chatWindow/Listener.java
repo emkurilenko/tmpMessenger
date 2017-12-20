@@ -2,8 +2,11 @@ package chatWindow;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import until.Compression;
 import userAction.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -40,11 +43,7 @@ public class Listener implements Runnable {
 
     @Override
     public void run() {
-
         initializeUser();
-
-        //  GetAllDialog.refreshDialog();
-
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -53,8 +52,6 @@ public class Listener implements Runnable {
             }
         };
         timer.schedule(timerTask, 0, 5000);
-        // controller.setDialogsList(GetAllDialog.getAllDialog());
-        // System.out.println(GetAllDialog.getAllDialog().size());
     }
 
     public static User getUser() {
@@ -62,8 +59,8 @@ public class Listener implements Runnable {
     }
 
     public static void initializeUser() {
-        user = GetUserInformation.getInformation(CookiesWork.cookie);
-        controller.setImageUser(GetUserInformation.getPictureFullSize(CookiesWork.cookie));
+        user = getInformation(CookiesWork.cookie);
+        controller.setImageUser(getPictureFullSize(CookiesWork.cookie));
         controller.setTextLogin(user.getLogin());
         controller.setTextName(user.getName() + " " + user.getSurname());
         System.out.println(user.getName());
@@ -217,7 +214,7 @@ public class Listener implements Runnable {
         }
         for (Dialog dlg :
                 allDialog) {
-            dlg.setPicture(GetUserInformation.getPictureSmallSize(dlg.getSecond()));
+            dlg.setPicture(getPictureSmallSize(dlg.getSecond()));
         }
         return allDialog;
     }
@@ -255,7 +252,7 @@ public class Listener implements Runnable {
             if (us.getLogin().equals(CookiesWork.cookie)) {
                 continue;
             } else {
-                us.setPicture(GetUserInformation.getPictureSmallSize(us.getLogin()));
+                us.setPicture(getPictureSmallSize(us.getLogin()));
                 list.add(us);
             }
         }
@@ -287,7 +284,7 @@ public class Listener implements Runnable {
 
         for (User us :
                 list) {
-            us.setPicture(GetUserInformation.getPictureSmallSize(us.getLogin()));
+            us.setPicture(getPictureSmallSize(us.getLogin()));
         }
         return list;
     }
@@ -313,5 +310,119 @@ public class Listener implements Runnable {
             if(connection!=null)
                 connection.disconnect();
         }
+    }
+
+    public static User getInformation(String login) {
+        User user = null;
+        URL url;
+        HttpURLConnection connection = null;
+        int code;
+        try {
+            String str = Consts.URL + "?operation=profile&type=info&login=" + login;
+            url = new URL(str);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Cookie", CookiesWork.cookie);
+            connection.setRequestProperty("Cache-Control", "no-cache");
+            code = connection.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream(), "windows-1251"));
+            String inputLine = in.readLine();
+            user = new Gson().fromJson(inputLine, User.class);
+            in.close();
+            connection.disconnect();
+            if(code!=HttpURLConnection.HTTP_OK){
+                Consts.showErrorDialog("Error","");
+            }
+        } catch (Exception e) {
+            System.out.println("err getInformation");
+        } finally {
+            if (connection != null)
+                connection.disconnect();
+        }
+        return user;
+    }
+
+    public static BufferedImage getPictureSmallSize(String login) {
+        URL url;
+        HttpURLConnection connection = null;
+        int codeImage;
+        BufferedImage bi = null;
+        try {
+            InputStream isa = new FileInputStream("src/main/resources/images/default40x40.png");
+            String str = Consts.URL + "?operation=profile&type=image&login=" + login + "&size=small";
+            url = new URL(str);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Cookie", CookiesWork.cookie);
+            codeImage = connection.getResponseCode();
+
+            if (codeImage == HttpURLConnection.HTTP_OK) {
+                InputStream is = connection.getInputStream();
+                bi = ImageIO.read(is);
+                if (bi == null) {
+                    bi = ImageIO.read(isa);
+                    is.close();
+                    isa.close();
+                    connection.disconnect();
+                    return bi;
+                } else {
+                    bi = Compression.createResizedCopy(Compression.compress(bi, 1.0f),
+                            40, 40, true);
+                }
+            } else {
+                bi = ImageIO.read(isa);
+            }
+            isa.close();
+            connection.disconnect();
+        } catch (FileNotFoundException e) {
+            System.out.println("not found file");
+        } catch (IOException e) {
+            System.out.println("error get picture size");
+        } finally {
+            if (connection != null)
+                connection.disconnect();
+        }
+        return bi;
+    }
+
+    public static BufferedImage getPictureFullSize(String login) {
+        URL url;
+        HttpURLConnection connection = null;
+        int code;
+        int codeImage;
+        BufferedImage bi = null;
+        System.out.println(login);
+        try {
+            String str = Consts.URL + "?operation=profile&type=image&login=" + login + "&size=full";
+            url = new URL(str);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Cookie", CookiesWork.cookie);
+            codeImage = connection.getResponseCode();
+            System.out.println(codeImage);
+            if (codeImage == HttpURLConnection.HTTP_OK) {
+                InputStream is = connection.getInputStream();
+                bi = ImageIO.read(is);
+                if (bi == null) {
+                    InputStream isa = new FileInputStream("src/main/resources/images/default.png");
+                    connection.disconnect();
+                    bi = ImageIO.read(isa);
+                } else {
+                    connection.disconnect();
+                    return Compression.createResizedCopy(bi,100,100,true);
+                }
+            } else {
+                InputStream isa = new FileInputStream("src/main/resources/images/default.png");
+                connection.disconnect();
+                bi = ImageIO.read(isa);
+            }
+        } catch (Exception e) {
+            System.out.println("error get picture full size");
+        } finally {
+            if (connection != null)
+                connection.disconnect();
+        }
+        return bi;
     }
 }

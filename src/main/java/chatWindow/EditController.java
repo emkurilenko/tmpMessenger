@@ -5,13 +5,13 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import until.Compression;
 import userAction.*;
 
 import javax.imageio.ImageIO;
@@ -161,7 +161,7 @@ public class EditController implements Initializable {
             nameUser.setText(Listener.getUser().getName());
             surnameUser.setText(Listener.getUser().getSurname());
             //BufferedImage bufferedImage = Compression.createResizedCopy(GetUserInformation.getPictureFullSize(CookiesWork.cookie), 100, 100, true);
-            Image image = SwingFXUtils.toFXImage(GetUserInformation.getPictureFullSize(CookiesWork.cookie), null);
+            Image image = SwingFXUtils.toFXImage(Listener.getPictureFullSize(CookiesWork.cookie), null);
             userImage.setImage(image);
         });
     }
