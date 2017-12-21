@@ -16,6 +16,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         primaryStageObj = primaryStage;
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/LoginView.fxml"));
         primaryStage.setTitle("Мессенджер");
@@ -23,7 +24,6 @@ public class Main extends Application {
         Scene mainScene = new Scene(root);
         primaryStage.setResizable(false);
         primaryStage.setScene(mainScene);
-
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
          //   deleteAllFilesFolder("src/main/resources/tmpsound/");

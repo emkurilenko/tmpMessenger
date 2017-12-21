@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import until.SHA;
+import userAction.CheckInput;
 import userAction.Consts;
 import userAction.CookiesWork;
 
@@ -39,7 +40,6 @@ public class LoginController {
     private JFXButton btnLogin;
     @FXML
     private JFXButton btnRegister;
-    private static ChatController con;
 
     @FXML
     void bntClickLogin(MouseEvent event) {
@@ -61,13 +61,10 @@ public class LoginController {
             return;
         }
 
-       /* if(!CheckInput.checkForLogin(login) || !CheckInput.checkPassword(password)){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("Ошибка ввода!");
-            alert.setContentText("Логин: Символов>2. Только буквы и цифры");
-            alert.showAndWait();
+        if(!CheckInput.checkForLogin(login) || !CheckInput.checkPassword(password)){
+            Consts.showErrorDialog("Ошибка ввода","Логин: Символов>2. Только буквы и цифры");
             return;
-        }*/
+        }
 
         try {
             String url = Consts.URL + "?operation=login&login=" + URLEncoder.encode(login, "UTF-8") + "&password=" + SHA.encrypt(password);
@@ -84,7 +81,7 @@ public class LoginController {
                 (((Node) event.getSource()).getScene()).getWindow().hide();
                 FXMLLoader fmxlLoader = new FXMLLoader(getClass().getClassLoader().getResource("views/chatScene.fxml"));
                 Parent window = (Pane) fmxlLoader.load();
-                con = fmxlLoader.<ChatController>getController();
+                ChatController con = fmxlLoader.<ChatController>getController();
                 Listener listener = new Listener(con);
                 Thread thread = new Thread(listener);
                 thread.start();
@@ -97,8 +94,6 @@ public class LoginController {
                 Consts.showErrorDialog(null, "User not found/password field.");
                 return;
             }
-            System.out.println(connection.getResponseCode());
-            System.out.println(CookiesWork.cookie);
         } catch (Throwable cause) {
             cause.getStackTrace();
         } finally {

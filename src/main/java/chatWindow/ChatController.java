@@ -3,6 +3,10 @@ package chatWindow;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXSpinner;
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,6 +34,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import login.Main;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
@@ -110,8 +115,8 @@ public class ChatController implements Initializable {
     private ObservableList<User> usersList;
     private ObservableList<Dialog> dialogsList;
     private ObservableList<Image> stickers;
+    private ObservableList<Message> messagesList;
     private ArrayList<Message> listMessage;
-
 
 
     private String reciver;
@@ -123,6 +128,7 @@ public class ChatController implements Initializable {
     private File bufferRecord;
     private User chooseUser;
 
+    private int DISPLAYED_MESSAGES = 8;
     private Thread threadAddMessage;
 
     private Image microphoneActiveImage = new Image(getClass().getClassLoader().getResource("images/microphone-active.png").toString());
@@ -190,6 +196,7 @@ public class ChatController implements Initializable {
         stage.showAndWait();
     }
 
+
     public synchronized void addToChat(Message msg) {
         Text dateText = new Text();
         Date data = new Date(msg.getDate());
@@ -211,6 +218,7 @@ public class ChatController implements Initializable {
                 if (msg.getType().equals("sound")) {
                     bl6.setText(msg.getSender() + ": " + "Голосовое сообщение!");
                     ImageView imageview = new ImageView(new Image(getClass().getClassLoader().getResource("images/sound.png").toString()));
+
                     bl6.setGraphic(imageview);
                     bl6.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
                 }
@@ -250,8 +258,6 @@ public class ChatController implements Initializable {
                 }
                 if (msg.getType().equals("sticker")) {
                     ImageView imageView = new ImageView(new Image(getClass().getClassLoader().getResource("images/sticker/sticker" + msg.getMessage() + ".png").toString()));
-                    imageView.setFitWidth(64);
-                    imageView.setFitHeight(64);
                     bl6.setGraphic(imageView);
                 }
 
@@ -271,7 +277,6 @@ public class ChatController implements Initializable {
         } else {
             threadAddMessage = new Thread(othersMessages);
         }
-        //  t2.setDaemon(true);
         threadAddMessage.start();
         try {
             Thread.sleep(100);
@@ -281,8 +286,8 @@ public class ChatController implements Initializable {
         Platform.runLater(() -> {
             chatPane.scrollTo(bufMessage.size() - 1);
         });
-
     }
+
 
     @FXML
     void chooseStickers(MouseEvent event) {
@@ -291,8 +296,8 @@ public class ChatController implements Initializable {
                 if (stikersListView.getSelectionModel().getSelectedItem() == null) {
                     return;
                 }
-                int index= stikersListView.getSelectionModel().getSelectedIndex();
-                String str = String.valueOf(index+1);
+                int index = stikersListView.getSelectionModel().getSelectedIndex();
+                String str = String.valueOf(index + 1);
                 Message message = new Message(CookiesWork.cookie, reciver, str, "sticker", Calendar.getInstance().getTimeInMillis());
                 Listener.send(message);
             }
@@ -314,6 +319,7 @@ public class ChatController implements Initializable {
     @FXML
     void btnHideDialogListener(MouseEvent event) {
         Platform.runLater(() -> {
+            resetTimer();
             vBoxCenter.setVisible(false);
         });
     }
@@ -378,8 +384,6 @@ public class ChatController implements Initializable {
 
     @FXML
     void btnClickContacts(MouseEvent event) {
-
-        resetTimer();
         vBoxCenter.setVisible(false);
         Platform.runLater(() -> {
             if (!listViewUsers.getItems().isEmpty()) {
@@ -397,30 +401,23 @@ public class ChatController implements Initializable {
                 listViewUsers.refresh();
             }
         });
-
     }
 
     @FXML
     void btnFriendListener(MouseEvent event) {
         Platform.runLater(() -> {
-            if (chooseUser.isFriend()) {
-                Listener.setFriend(chooseUser.getLogin(), String.valueOf(false));
-                btnImageFriend.setImage(removeFriend);
-                btnAddFriend.setText("Удалить из друзей");
-                chooseUser = Listener.getInformation(chooseUser.getLogin());
-            } else {
-                btnImageFriend.setImage(addFriend);
-                Listener.setFriend(chooseUser.getLogin(), String.valueOf(true));
-                btnAddFriend.setText("Добавить в друзья");
-                chooseUser = Listener.getInformation(chooseUser.getLogin());
-            }
+            Listener.setFriend(chooseUser.getLogin(), String.valueOf(!chooseUser.isFriend()));
+            setReciverInformation(chooseUser.getLogin());
         });
+
     }
 
     @FXML
     void clickBtnDialog(MouseEvent event) {
         Platform.runLater(() -> {
-            resetTimer();
+            if(!listViewDialog.getItems().isEmpty()){
+                labelNotFoundDialog.setVisible(false);
+            }
             vBoxCenter.setVisible(false);
             setDialogsList(Listener.getDialog());
             chatPane.getItems().clear();
@@ -432,46 +429,40 @@ public class ChatController implements Initializable {
     @FXML
     void chooseMessage(MouseEvent event) {
         Platform.runLater(() -> {
-        if (!chatPane.getItems().isEmpty()) {
-            if (chatPane.getSelectionModel().getSelectedItem() == null) {
-                return;
-            }
-            int index = chatPane.getSelectionModel().getSelectedIndex();
-            System.out.println(index);
-            Message msg = bufMessage.get(index);
-            if (msg.getType().equals("sound")) {
-                System.out.println("sound");
-                try {
-                    String musicFile = "src/main/resources/tmpsound/record-" + msg.getSender() + "-" + msg.getReceiver() + "-" + String.valueOf(msg.getDate() / 1000) + ".wave";
-                    File file = new File(musicFile);
-
-                    if (!file.exists()) {
-                        System.out.println("file not found");
-                        String filestring = Listener.getSound(msg);
-                        System.out.println(filestring);
-                        Media media = new Media(new File(filestring).toURI().toString());
-                        MediaPlayer mediaPlayer = new MediaPlayer(media);
-                        mediaPlayer.play();
-                    } else {
-                        Media media = new Media(new File(musicFile).toURI().toString());
-                        MediaPlayer mediaPlayer = new MediaPlayer(media);
-                        mediaPlayer.play();
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+            if (!chatPane.getItems().isEmpty()) {
+                if (chatPane.getSelectionModel().getSelectedItem() == null) {
+                    return;
                 }
+                int index = chatPane.getSelectionModel().getSelectedIndex();
+                System.out.println(index);
+                Message msg = bufMessage.get(index);
+                if (msg.getType().equals("sound")) {
+                    try {
+                        String musicFile = "src/main/resources/tmpsound/record-" + msg.getSender() + "-" + msg.getReceiver() + "-" + String.valueOf(msg.getDate() / 1000) + ".wave";
+                        File file = new File(musicFile);
+                        if (!file.exists()) {
+                            String filestring = Listener.getSound(msg);
+                            Media media = new Media(new File(filestring).toURI().toString());
+                            MediaPlayer mediaPlayer = new MediaPlayer(media);
+                            mediaPlayer.play();
+                        } else {
+                            Media media = new Media(new File(musicFile).toURI().toString());
+                            MediaPlayer mediaPlayer = new MediaPlayer(media);
+                            mediaPlayer.play();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                chatPane.getSelectionModel().clearSelection();
             }
-            chatPane.getSelectionModel().clearSelection();
-        }
-
         });
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        labelNotFoundDialog.setVisible(false);
         vBoxCenter.setVisible(false);
         listViewDialog.setVisible(true);
         SearchPanel.setVisible(false);
@@ -487,10 +478,6 @@ public class ChatController implements Initializable {
             }
         });
         recorder = new Recorder();
-        if(listViewDialog.getItems().isEmpty()){
-            labelNotFoundDialog.setVisible(true);
-        }
-
         loadStickers();
     }
 
@@ -506,26 +493,27 @@ public class ChatController implements Initializable {
                 reciver = listViewDialog.getSelectionModel().getSelectedItem().getSecond();
                 setReciverInformation(reciver);
                 resetTimer();
+                messagesList = chatPane.getItems();
                 timer = new Timer();
                 try {
-                 Thread thread = new Thread(()->{
-                    TimerTask timerTask = new TimerTask() {
-                        @Override
-                        public void run() {
-                            listMessage = Listener.getMessage(reciver, String.valueOf(firstTime));
-                            for (Message msg :
-                                    listMessage) {
-                                System.out.println(msg);
-                                bufMessage.add(msg);
-                                addToChat(msg);
+                    Thread thread = new Thread(() -> {
+                        TimerTask timerTask = new TimerTask() {
+                            @Override
+                            public void run() {
+                                for (Message msg :
+                                        Listener.getMessage(reciver, String.valueOf(true))) {
+                                    if (!bufMessage.contains(msg)) {
+                                        bufMessage.add(msg);
+                                        addToChat(msg);
+                                    }
+                                }
+                                firstTime = false;
                             }
-                            firstTime = false;
-                        }
-                    };
-                    timer.schedule(timerTask, 0, 3000);
-                });
-                 thread.start();
-                }catch (Exception e){
+                        };
+                        timer.schedule(timerTask, 0, 2000);
+                    });
+                    thread.start();
+                } catch (Exception e) {
                     resetTimer();
                     listViewDialogListener();
                 }
@@ -560,14 +548,16 @@ public class ChatController implements Initializable {
                     @Override
                     public void run() {
                         for (Message msg :
-                                Listener.getMessage(reciver, String.valueOf(firstTime))) {
-                            addToChat(msg);
-                            bufMessage.add(msg);
+                                Listener.getMessage(reciver, String.valueOf(true))) {
+                            if (!bufMessage.contains(msg)) {
+                                addToChat(msg);
+                                bufMessage.add(msg);
+                            }
                         }
                         firstTime = false;
                     }
                 };
-                timer.schedule(timerTask, 0, 3000);
+                timer.schedule(timerTask, 0, 2000);
             }
         });
     }
@@ -580,7 +570,7 @@ public class ChatController implements Initializable {
             if (chooseUser.isFriend()) {
                 btnImageFriend.setImage(removeFriend);
                 btnAddFriend.setText("Удалить из друзей");
-            } else {
+            } else if (!chooseUser.isFriend()) {
                 btnImageFriend.setImage(addFriend);
                 btnAddFriend.setText("Добавить в друзья");
             }
@@ -594,9 +584,12 @@ public class ChatController implements Initializable {
             chatPane.getItems().clear();
             lastUpdate = 0;
             firstTime = true;
-//            if(!listMessage.isEmpty()) {
-  //              listMessage.clear();
-            if(!bufMessage.isEmpty()) {
+            if (listMessage != null) {
+                if (!listMessage.isEmpty()) {
+                    listMessage.clear();
+                }
+            }
+            if (!bufMessage.isEmpty()) {
                 bufMessage.clear();
             }
         }
@@ -623,24 +616,27 @@ public class ChatController implements Initializable {
 
     public void setDialogsList(ArrayList<Dialog> list) {
         Platform.runLater(() -> {
-            labelNotFoundDialog.setVisible(true);
+            if (list.isEmpty()) {
+                labelNotFoundDialog.setVisible(true);
+            }
             dialogsList = FXCollections.observableList(list);
             listViewDialog.setItems(dialogsList);
             listViewDialog.setCellFactory(new CellRenderDialog());
         });
     }
 
-    public void setStikersList(ArrayList<Image> list){
-        Platform.runLater(()->{
+    public void setStikersList(ArrayList<Image> list) {
+        Platform.runLater(() -> {
             stickers = FXCollections.observableList(list);
             stikersListView.setItems(stickers);
             stikersListView.setCellFactory(new CellRenderSticker());
         });
     }
 
-    public void loadStickers(){
+
+    public void loadStickers() {
         ArrayList<Image> arrayList = new ArrayList<>();
-        for(int i = 1; i<29;i++){
+        for (int i = 1; i < 29; i++) {
             arrayList.add(new Image(getClass().getClassLoader().getResource("images/sticker/sticker" + i + ".png").toString()));
         }
         setStikersList(arrayList);

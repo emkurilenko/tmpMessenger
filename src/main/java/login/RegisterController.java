@@ -36,11 +36,6 @@ import java.util.List;
 public class RegisterController {
     private HttpURLConnection connection = null;
     private File fileImage;
-    private boolean check;
-    private String login;
-    private String password;
-    private String name;
-    private String secondName;
 
     @FXML
     private JFXTextField idLogin;
@@ -68,10 +63,10 @@ public class RegisterController {
             Consts.showErrorDialog("Error connection!", "Нет соеденения с сервером.");
             return;
         }
-        name = idName.getText();
-        secondName = idSecondName.getText();
-        login = idLogin.getText();
-        password = idPass.getText();
+        String name = idName.getText();
+        String secondName = idSecondName.getText();
+        String login = idLogin.getText();
+        String password = idPass.getText();
 
         if (name.isEmpty() || secondName.isEmpty() || login.isEmpty() || password.isEmpty()) {
             Consts.showErrorDialog(null, "One of the fields is empty.");
@@ -85,8 +80,8 @@ public class RegisterController {
         name = CheckInput.firstUpperCase(name);
         secondName = CheckInput.firstUpperCase(secondName);
 
-        if (check && (!CheckInput.checkForInputName(name) || !CheckInput.checkForInputName(secondName) ||
-                !CheckInput.checkForLogin(login) || !CheckInput.checkPassword(password))) {
+        if (!CheckInput.checkForInputName(name) || !CheckInput.checkForInputName(secondName) ||
+                !CheckInput.checkForLogin(login) || !CheckInput.checkPassword(password)) {
             Consts.showErrorDialog("Error Input", "Ошибка ввода");
             return;
         }

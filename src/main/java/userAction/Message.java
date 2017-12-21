@@ -83,6 +83,34 @@ public class Message {
         return message;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Message message1 = (Message) o;
+
+        if (date != message1.date) return false;
+        if (sender != null ? !sender.equals(message1.sender) : message1.sender != null) return false;
+        if (receiver != null ? !receiver.equals(message1.receiver) : message1.receiver != null) return false;
+        if (message != null ? !message.equals(message1.message) : message1.message != null) return false;
+        if (type != null ? !type.equals(message1.type) : message1.type != null) return false;
+        if (sound != null ? !sound.equals(message1.sound) : message1.sound != null) return false;
+        return file != null ? file.equals(message1.file) : message1.file == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = sender != null ? sender.hashCode() : 0;
+        result = 31 * result + (receiver != null ? receiver.hashCode() : 0);
+        result = 31 * result + (int) (date ^ (date >>> 32));
+        result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (sound != null ? sound.hashCode() : 0);
+        result = 31 * result + (file != null ? file.hashCode() : 0);
+        return result;
+    }
+
     public void setMessage(String message) {
         this.message = message;
     }

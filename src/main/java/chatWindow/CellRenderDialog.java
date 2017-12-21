@@ -55,7 +55,12 @@ public class CellRenderDialog implements Callback<ListView<Dialog>, ListCell<Dia
 
                         Text lastMessage = null;
                         if (dlg.getType().equals("text")) {
-                            lastMessage = new Text(dlg.getLastMessage());
+                            String message = dlg.getLastMessage();
+                            if(message.length()>14){
+                                message = message.substring(0,14);
+                                message += "...";
+                            }
+                            lastMessage = new Text(message);
                             lastMessage.setFont(Font.font("SansSerif Regular", 14));
                         }
                         if (dlg.getType().equals("sound")) {

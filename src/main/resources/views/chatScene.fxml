@@ -122,8 +122,17 @@
             </HBox>
             <Pane prefHeight="470.0" prefWidth="250.0" style="-fx-background-color: #e7e7e7;">
                <children>
-                  <ListView fx:id="listViewDialog" onMouseClicked="#listViewDialogListener" prefHeight="485.0" prefWidth="250.0" style="-fx-border-image-width: 0; -fx-background-color: #e7e7e7;" />
-                  <VBox fx:id="SearchPanel" prefHeight="485.0" prefWidth="250.0">
+                  <Pane prefHeight="485.0" prefWidth="251.0">
+                     <children>
+                        <ListView fx:id="listViewDialog" onMouseClicked="#listViewDialogListener" prefHeight="485.0" prefWidth="250.0" style="-fx-border-image-width: 0; -fx-background-color: #e7e7e7;" />
+                        <Label fx:id="labelNotFoundDialog" layoutX="15.0" layoutY="185.0" prefHeight="115.0" prefWidth="221.0" text="У вас нет еще диалогов. Выполните поиск." textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font name="SansSerif Regular" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <VBox fx:id="SearchPanel" prefHeight="485.0" prefWidth="250.0" visible="false">
                      <children>
                         <HBox alignment="CENTER" prefHeight="30.0" prefWidth="220.0" style="-fx-background-color: #583989;">
                            <children>
@@ -152,11 +161,6 @@
                         <Pane prefHeight="511.0" prefWidth="250.0">
                            <children>
                               <ListView fx:id="listViewUsers" onMouseClicked="#listViewUsersListener" prefHeight="455.0" prefWidth="250.0" style="-fx-border-image-width: 0; -fx-background-color: #e7e7e7;" />
-                              <Label fx:id="labelNotFoundDialog" layoutX="16.0" layoutY="178.0" prefHeight="115.0" prefWidth="221.0" text="У вас нет еще диалогов. Выполните поиск." textAlignment="CENTER" textFill="WHITE" wrapText="true">
-                                 <font>
-                                    <Font name="SansSerif Regular" size="16.0" />
-                                 </font>
-                              </Label>
                            </children>
                         </Pane>
                      </children>

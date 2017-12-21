@@ -162,9 +162,7 @@ public class Listener implements Runnable {
             connection.setRequestProperty("Cookie", CookiesWork.cookie);
             int code = connection.getResponseCode();
             is = connection.getInputStream();
-
             fileName = "src/main/resources/tmpsound/record-" + msg.getSender() + "-" + msg.getReceiver() + "-" + String.valueOf(msg.getDate() / 1000) + ".wave";
-            System.out.println(fileName);
             File path = new File(fileName);
             FileOutputStream fos;
             try {
@@ -175,7 +173,6 @@ public class Listener implements Runnable {
                 System.out.println("exception write sound");
             }
             // is.close();
-            System.out.println("GET SOUND " + code);
             connection.disconnect();
         } catch (FileNotFoundException e) {
             System.out.println("FILE NOT FOUND!");
